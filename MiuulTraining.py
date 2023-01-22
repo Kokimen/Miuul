@@ -478,7 +478,271 @@ def number_check(number):  # birbirini tekrar eden işlemler olursa fonksiyon ya
 
 number_check(-9)
 
+
 # ELSE AND ELIF
+def number_check(number):
+    if number > 10:
+        print("greater than 10")
+    elif number < 10:
+        print("less than 10")
+    else:
+        print("equal to 10")
+
+
+number_check(9)
+# for loop
+students = ['jon', 'jen', 'jun', 'jin']
+students[0]
+
+for student in students:
+    print(student.upper())
+
+salaries = [100, 200, 300, 400, 500]
+for salary in salaries:
+    print(int(salary * 1.2))
+
+
+def new_salary(salary, rate):
+    return int(salary * rate)
+
+
+new_salary(1500, 1.1)
+
+for salary in salaries:
+    print(new_salary(salary, 1.1))
+
+salaries2 = [400, 800, 1200, 1600, 2000]
+
+for salary in salaries2:
+    print(new_salary(salary, 1.15))
+
+for salary in salaries:
+    if salary > 1000:
+        print(new_salary(salary, 1.1))
+    else:
+        print(new_salary(salary, 1.2))
+
+# -----Uygulama Mülakat Sorusu------#
+# Aşağıdaki şekilde string değiştiren fonksiyon yazınız
+# hi my name is john and i am learning python
+
+
+range(len('miuul'))
+for i in range(len('miuul')):
+    print(i)
+
+
+def alternating(string):
+    new_string = ""
+    for string_index in range(len(string)):
+        if string_index % 2 == 0:
+            new_string += string[string_index].upper()
+        else:
+            new_string += string[string_index].lower()
+    print(new_string)
+
+
+alternating("hi my name is john and i am learning python")
+
+##BREAK CONTINUE WHILE##
+salaries = [400, 800, 1200, 3000, 2000]
+for salary in salaries:
+    if salary == 3000:
+        break
+    print(salary)
+
+for salary in salaries:
+    if salary == 3000:
+        continue
+    print(salary)
+
+number = 1
+while number < 5:
+    print(number)
+    number += 1
+
+##ENUMERATE##:Üzerinde gezilebilir bir liste içerisinde elemanlara işlem uyghulanırken işlem uygulanan elemanların
+# index bilgisini tutan ve daha sonra bu indexe göre işlem yapmamızı sağlayan yapı.
+
+students = ['jon', 'jen', 'jun', 'jin']
+for student in students:
+    print(student)
+
+for index, student in enumerate(students):
+    print(index, student)
+
+A = []
+B = []
+
+for index, student in enumerate(students):
+    if index % 2 == 0:
+        A.append(student)
+    else:
+        B.append(student)
+    print(index, student)
+
+# -----Uygulama Mülakat Sorusu------#
+# divide students fonksiyon yazınız.
+# çift indexte yer alan öğrencileri bir listeye
+# tek indexte yer alan öğrencileri başka bir listeye
+# bu iki liste tek bir liste olarak return olsun
+
+students = ['jon', 'jen', 'jun', 'jin']
+
+
+def divide_students(students):
+    groups = [[], []]
+    for index, student in enumerate(students):
+        if index % 2 == 0:
+            groups[0].append(student)
+        else:
+            groups[1].append(student)
+    print(groups)
+    return groups
+
+
+divide_students(students)
+
+
+##Alternating Fonksiyonunun Enumerate ile Yazımı
+def alternating_with_enumerate(string):
+    new_string = ""
+    for index, letter in enumerate(string):
+        if index % 2 == 0:
+            new_string += letter.upper()
+        else:
+            new_string += letter.lower()
+    print(new_string)
+
+
+alternating_with_enumerate("hi my name is john and i am learning python")
+
+##ZIP##!hayat kurtaran bilgi: ayrı listeleri tek bir liste içerisine her birisinde bululnan elemanları aynı sırada
+# zipleyerek bir araya getirerek, her birisini tek bir eleman şeklinde görebileceğimiz liste haline getirir.
+
+students = ['jon', 'jen', 'jun', 'jin']
+departments = ['math', 'stat', 'phys', 'astro']
+ages = [23, 30, 26, 22]
+
+list(zip(students, departments, ages))
+
+
+# LAMBDA & MAP & FILTER & REDUCE#: vektör seviyesinde işlem yaparlar, lambda önemlidir, apply ile kullanılır.
+# lambda: bir kullan at fonksiyondur.
+
+def summer(a, b):
+    return a + b
+
+
+summer(1, 3) * 9
+
+new_sum = lambda a, b: a + b * 9
+
+new_sum(4, 5)
+
+# map#: for yerine kullanılır, döngüden kurtarır.
+salaries = [400, 800, 1200, 3000, 2000]
+
+
+def new_salary(x):
+    return x * 1.2
+
+
+new_salary(5000)
+
+for salary in salaries:
+    print(new_salary(salary))
+
+list(map(new_salary, salaries))
+list(map(lambda x: x * 1.2, salaries))
+
+# filter#: sorgu
+list_store = [1, 2, 3, 4, 5, 6]
+list(filter(lambda x: x % 2 == 0, list_store))
+
+# reduce#
+from functools import reduce
+
+list_store = [1, 2, 3, 4]
+reduce(lambda a, b: a + b, list_store)
+
+######LIST COMPREHENSIONS#######: birden fazla kod ve satır ile yapılacak işlemleri tek satırda yapabilen yapılardır, çok önemli!
+
+salaries = [100, 200, 300, 400, 500]
+
+
+def new_salary(x):
+    return x * 1.2
+
+
+null_list = []
+
+for salary in salaries:
+    null_list.append(new_salary(salary))
+
+for salary in salaries:
+    if salary > 300:
+        null_list.append(new_salary(salary))
+    else:
+        null_list.append(new_salary(salary * 2))
+
+#eğer if tek başına ise en sağda
+#eğer else var ise for en sağda, for'un solunda da else
+[salary * 2 if salary > 300 else salary * 1.5 for salary in salaries]
+[new_salary(salary) if salary < 300 else salary*0.9 for salary in salaries]
+
+students = ["jen", "jun", "jon", "jin"]
+students_no = ["jen", "jon"]
+
+[student.lower() if student in students_no else student.upper() for student in students]
+[student.lower() if student not in students_no else student.upper() for student in students]
+
+#########DICT COMPREHENSIONS########
+dictionary = {'a': 1, 'b': 2}
+dictionary.keys()
+dictionary.values()
+dictionary.items()
+
+#hayat kurtaran! key ya da valueye özel bir şekilde müdahale etmek
+{k: v**2 for(k,v) in dictionary.items()}
+{k.upper(): v for (k,v) in dictionary.items()}
+
+#Uygulama Mülakat Sorusu Dict#
+#çift sayıların karesi alınacak bir sözlüğe eklenecek
+#keyler orijinal kalacak, valueler ise değişecek
+
+numbers = range(10)
+new_dict = {}
+
+for n in numbers:
+    if n % 2 == 0:
+        #hayat kurtaran! elemanları gezilen numbers içerisindeki n'lere dokunmadık, aynı n ifadesinin karesini value
+        #bölümüne ekledik, n'i köşeli paranteze alarak değerini key bölümüne ekledik
+        new_dict[n] = n**2
+
+{n: n**2 for n in numbers if n % 2 == 0}
+
+##List & Dict Comprehension Uygulamaları# ÖNEMLİDİR
+#Bir Veri Steindeki Değişken İsimlerini Değiştirmek#
+import seaborn as sns
+df = sns.load_dataset("car_crashes")
+df.columns
+
+for col in df.columns:
+    print(col.upper())
+
+A = []
+for col in df.columns:
+    A.append(col.upper())
+df.columns = A
+
+df.columns = [col.upper() for col in df.columns]
+
+#İsminde INS olan değişkenlerin başına Flag olmayanlarınkine No_Flag eklemek
+
+["FLAG_" + col for col in df.columns if "INS" in col]
+
+["FLAG_" + col if "INS" in col else "NO_FLAG_" + col for col in df.columns]
 
 ##############################
 # BİRLEŞTİRME İŞLEMLERİ (JOIN)#
