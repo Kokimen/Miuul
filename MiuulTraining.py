@@ -5,83 +5,59 @@ print(9)
 
 # Assignment and Variables#
 a = 9
-a
+
 b = "hello ai era"
-b
+
 c = 10
 a * c
 d = a * 5 - c
-d
+
 # -------------------------------------------
 ###VIRTUAL ENVIRONMENT and PACKAGE MANAGEMENT###
 # Creating Virtual Environment
-# conda
-# create - n
-# virtual_env
+# conda create - n virtual_env
 
 # listing of loaded packages
-# conda
-# list
+# conda list
 
 # install packages
-# conda
-# install
-# numpy
+# conda install numpy
 
 # install multiple packages
-# conda
-# install
-# numpy
-# scipy
-# pandas
+# conda install numpy scipy pandas
 
 # delete package
-# conda
-# remove
-# numpy
+#conda remove numpy
 
 # install another version of package
-# conda
-# install
-# numpy = 1.20
-# .1
+#conda install numpy = 1.20.1
 
 # upgrade package
-# conda
-# upgrade
-# numpy
+#conda upgrade numpy
 
 # upgrade all packages
-# conda
-# upgrade - all
-#
+# conda upgrade - all
 # pip: pypi (python package index)
 
 # # install package
-# pip
-# install
-# pandas == 1.5
-# .1
+# pip install pandas == 1.5.1
 
 # # import list from yaml file
-# conda
-# env
-# create - f
-# environment.yaml
+# conda env create - f environment.yaml
 
 # -----------------------------------
 # DATA STRUCTURES and QUICK TRAINING
 # numbers: integer
-# x = 46
+x = 46
 
 # numbers: float
-# x = 10.3
+x = 10.3
 
 # numbers: complex
-# x = 2j + 1
+x = 2j + 1
 
 # string
-# x = "hello ai"
+x = "hello ai"
 
 # boolean
 # True
@@ -374,7 +350,7 @@ def divide(a, b):
 divide(1, 2)
 
 
-def divide(a, b=1):  # -->we can enter default values to beginner people
+def divide(a, b = 1):  # -->we can enter default values to beginner people
     print(a / b)
 
 
@@ -689,7 +665,8 @@ for salary in salaries:
 # eğer if tek başına ise en sağda
 # eğer else var ise for en sağda, for'un solunda da else
 [salary * 2 if salary > 300 else salary * 1.5 for salary in salaries]
-[new_salary(salary) if salary < 300 else salary * 0.9 for salary in salaries]
+
+[new_salary(salary) if salary >= 300 else salary * 1.5 for salary in salaries]
 
 students = ["jen", "jun", "jon", "jin"]
 students_no = ["jen", "jon"]
@@ -723,27 +700,24 @@ for n in numbers:
 {n: n ** 2 for n in numbers if n % 2 == 0}
 
 ##List & Dict Comprehension Uygulamaları# ÖNEMLİDİR
-# Bir Veri Steindeki Değişken İsimlerini Değiştirmek#
+# Bir Veri Setindeki Değişken İsimlerini Değiştirmek#
 import seaborn as sns
 
 df = sns.load_dataset("car_crashes")
 df.columns
 
-for col in df.columns:
-    print(col.upper())
+[print(col.upper()) for col in df.columns]
 
 A = []
-for col in df.columns:
-    A.append(col.upper())
+
+[A.append(col.upper()) for col in df.columns]
+
 df.columns = A
 
-df.columns = [col.upper() for col in df.columns]
 
 # İsminde INS olan değişkenlerin başına Flag olmayanlarınkine No_Flag eklemek
 
-["FLAG_" + col for col in df.columns if "INS" in col]
-
-["FLAG_" + col if "INS" in col else "NO_FLAG_" + col for col in df.columns]
+["FLAG " + col if col.__contains__("ins") else "NO_FLAG " + col for col in df.columns]
 
 # Amaç key'i string, values, aşağıdaki gibi bir liste olan sözlük oluşturmak, sadece sayısal değişkenler için yapılacak
 # Output
@@ -760,13 +734,13 @@ import seaborn as sns
 df = sns.load_dataset('car_crashes')
 df.columns
 
-# tipi object olmayanları seç, "O" ifadesi objectin yanı stringin temsili.
+# tipi object olmayanları seç, "O" ifadesi objectin yanı kategorik temsili.
 num_cols = [col for col in df.columns if df[col].dtype != "O"]
 soz = {}
 agg_list = ["mean", "min", "max", "sum"]
 
 for col in num_cols:
-    soz[col] = agg_list
+    soz[col] = agg_list #key değeri soz[col], value değeri agg_list
 
 new_dict = {col: agg_list for col in num_cols}
 
@@ -791,8 +765,8 @@ import numpy as np
 a = [1, 2, 3, 4]
 b = [2, 3, 4, 5]
 ab = []
-for i in range(0, len(a)):
-    ab.append(a[i] * b[i])
+
+[ab.append(a[i]*b[i]) for i in range(len(a))]
 
 # numpy hali
 a = np.array([1, 2, 3, 4])
@@ -842,9 +816,9 @@ a[2, 3] = 2.9  # float değer olmaz, 2 değeri girilir, numpy tek tip veri tutar
 a[:, 1]  # bütün satırlar ve indexi sıfır olan sütunlar
 
 # Fancy Index
-v = np.arange(0, 30, 3)  # 0'dan 30'a 3'er artan array
+v = np.arange(0, 60, 3)  # 0'dan 30'a 3'er artan array
 v[1]
-catch = [1, 2, 3]  # index numaraları
+catch = [1, 2, 3, 19]  # index numaraları
 v[catch]
 
 # Numpy Koşullu İşlemler
@@ -889,7 +863,6 @@ df = pd.read_csv("datasets/advertising.csv")
 df.head()
 
 # VERİYE HIZLI BAKIŞ#
-import pandas as pd
 import seaborn as sns
 
 df = sns.load_dataset("titanic")
@@ -908,7 +881,6 @@ df["sex"].head()
 df["sex"].value_counts()
 
 # Pandasta Seçim İşlemleri
-import pandas as pd
 import seaborn as sns
 
 df = sns.load_dataset("titanic")
@@ -936,7 +908,6 @@ df = df.reset_index()
 
 # Değişkenlerle oynamak#
 import pandas as pd
-import seaborn as sns
 
 # bütün çıktıları göster
 pd.set_option('display.max_columns', None)
@@ -991,8 +962,8 @@ df_new = df.loc[(df["age"] > 50)
 
 df_new["embark_town"].value_counts()
 
-#Toplulaştırma ve Gruplama (Aggregation and Grouping)#
-#count, first, last, mean, median, min, max, std, var, sum#
+# Toplulaştırma ve Gruplama (Aggregation and Grouping)#
+# count, first, last, mean, median, min, max, std, var, sum#
 
 df.groupby("sex")["age"].mean()
 
@@ -1006,28 +977,56 @@ df.groupby(["sex", "embark_town"]).agg({"age": ["mean", "sum"], "survived": "mea
 
 df.groupby(["sex", "embark_town"]).agg({"age": ["mean", "sum"], "survived": "mean", "sex": "count"})
 
-#Pivot Table#
+# Pivot Table#
 df.pivot_table("survived", "sex", "embarked")
 df.pivot_table("survived", "sex", ["embarked", "class"])
 
-df["new_age"] = pd.cut(df["age"], [0, 10, 20, 40, 70]) #sayısal değişkeni kategorik değişkene çevirir, değişkeni tanıyorsanız
-#cut, tanımıyorsanız çeyreğe bölsün diye qcut.
+df["new_age"] = pd.cut(df["age"],
+                       [0, 10, 20, 40, 70])  # sayısal değişkeni kategorik değişkene çevirir, değişkeni tanıyorsanız
+# cut, tanımıyorsanız çeyreğe bölsün diye qcut.
 
 df.pivot_table("survived", "sex", ["new_age", "class"])
 pd.set_option("display.width", 500)
 
-#Apply ve Lambda# satırlarda/sütunlarda elimizdeki fonksiyonu uygulamamızı sağlar / geçici olarak kullan at fonksiyon kullanmamızı sağlar
+# Apply ve Lambda# satırlarda/sütunlarda elimizdeki fonksiyonu uygulamamızı sağlar / geçici olarak kullan at fonksiyon kullanmamızı sağlar
 import pandas as pd
 import seaborn as sns
+
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", 500)
 df = sns.load_dataset("titanic")
 df.head()
 
-df["age2"] = df["age"]*2
-df["age3"] = df["age"]*5
+df["age2"] = df["age"] * 2
+df["age3"] = df["age"] * 5
 
-(df["age"]/10).head()
+(df["age"] / 10).head()
+
+for col in df.columns:
+    if "age" in col:
+        print((df[col]) / 10)
+
+for col in df.columns:
+    if "age" in col:
+        df[col] = df[col] / 10
+
+df[["age", "age2", "age3"]].apply(lambda x: x / 10).head()
+# tüm satırları seç, içerisinde age geçen tüm sütunları seç, geçici olarak 10'a böl.
+# x burada değişkenleri temsil etmektedir.
+df.loc[:, df.columns.str.contains("age")].apply(lambda x: x / 10).head()
+
+df.loc[:, df.columns.str.contains("age")].apply(lambda x: (x - x.mean()) / x.std()).head()
+
+
+def standar_scaler(col_name):
+    return (col_name - col_name.mean()) / col_name.std()
+
+
+df.loc[:, df.columns.str.contains("age")].apply(standar_scaler).head()
+
+df.loc[:, ["age", "age2", "age3"]] = df.loc[:, df.columns.str.contains("age")].apply(standar_scaler).head()
+
+df.loc[:, df.columns.str.contains("age")] = df.loc[:, df.columns.str.contains("age")].apply(standar_scaler).head()
 
 ##############################
 # BİRLEŞTİRME İŞLEMLERİ (JOIN)#
@@ -1316,7 +1315,6 @@ def num_summary(dataframe, numerical_col, plot=False):
         plt.title(numerical_col)
         plt.show(block = True)
 
-
 num_summary(df, "age", plot = True)
 
 for col in num_cols:
@@ -1331,6 +1329,7 @@ pd.set_option('display.width', 500)
 df = sns.load_dataset('titanic')
 df.head()
 df.info()
+
 
 
 # eşsiz değer sayısı 10'dan küçükse kategorik değişken muamelesi yapacağız, eğer 20 den büyükse cardinal değişken
