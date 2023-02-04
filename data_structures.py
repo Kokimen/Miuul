@@ -108,7 +108,7 @@ s.symmetric_difference(s2)  # birbirinde olmayanlar
 s.intersection(s2)  # kesişim
 s & s2
 
-s.union(s2) # birleşim
+s.union(s2)  # birleşim
 
 s.isdisjoint(s2)  # kesişim boş mu?
 
@@ -140,7 +140,7 @@ def summer(x, y):
     Parameters
     ----------
     x: int ya da float gir
-    y: int ya da flaot gir
+    y: int ya da float gir
 
     Returns
     -------
@@ -148,3 +148,73 @@ def summer(x, y):
     """
     print(x + y)
 
+
+list_store = []
+
+
+def add_element(a, b):
+    c = a * b
+    list_store.append(c)
+    print(list_store)
+
+
+add_element(1, 8)
+
+
+def calculate(varm, moisture, charge):
+    return (varm + moisture) / charge  # return çıktıyı girdi olarak kullandırtır.
+
+
+calculate(98, 12, 78) * 10
+
+
+def standardization(a, b):
+    return a * .1 * b * b
+
+
+standardization(45, 1)
+
+
+def all_calculation(varm, moisture, charge, c):
+    a = calculate(varm, moisture, charge)
+    b = standardization(a, c)
+    print(b * 10)
+
+
+all_calculation(1, 3, 5, 12)
+
+names = ["he", "hu", "hi"]
+
+for name in names:
+    print(name.upper())
+
+word = "hi my name is john and i am learning python"
+
+
+def alternating(string):
+    new_string = ""
+    for words in range(len(string)):
+        if words % 2 == 0:
+            new_string += string[words].upper()
+        else:
+            new_string += string[words].lower()
+    print(new_string)
+
+
+alternating(word)
+
+salaries = [1, 2, 3]
+for salary in salaries:
+    if salary == 2:
+        break
+    print(salary)
+
+for salary in salaries:
+    if salary == 2:
+        continue
+    print(salary)
+
+for salary in salaries:
+    while salary < 5:
+        print(salary)
+        salary += 2
