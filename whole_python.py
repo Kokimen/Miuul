@@ -1,3 +1,7 @@
+################################
+# VERİ YAPILARI, DATA STRUCTURES
+################################
+
 x = 46
 
 x = 10.3
@@ -116,6 +120,10 @@ s.issubset(s2)  # alt küme mi?
 
 s.issuperset(s2)  # kapsıyor mu?
 
+##################################################
+# FONKSİYONLAR, KOŞULLAR, DÖNGÜLER, COMPREHENSIONS
+##################################################
+
 print('a', 'b', sep = '-_-')
 
 
@@ -218,3 +226,72 @@ for salary in salaries:
     while salary < 5:
         print(salary)
         salary += 2
+
+foods = ['bread', 'meatball', 'soup', 'chicken']
+
+A = []
+B = []
+
+for index, food in enumerate(foods):
+    if index % 2 == 0:
+        A.append(food)
+    else:
+        B.append(food)
+
+foods = ['bread', 'meatball', 'soup', 'chicken']
+
+
+def divide_foods(foods):
+    groups = [[], []]
+    for index, food in enumerate(foods):
+        if index % 2 == 0:
+            groups[0].append(food)
+        else:
+            groups[1].append(food)
+    print(groups)
+    return groups
+
+
+divide_foods(foods)
+
+
+def alternating(string):
+    new_string = ''
+    for index, word in enumerate(string):  # enumerate: range ve len yerine, stringe ve indexe ihtiyaçta kullanılır.
+        if index % 2 == 0:
+            new_string += word.upper()
+        else:
+            new_string += word.lower()
+    print(new_string)
+
+
+alternating("i can write some codes thanks to vahit keskin")
+
+names = ['ahmet', 'sevval', 'cansu']
+departments = ['muhasebe', 'temizlik', 'tasarim']
+ages = [40, 34, 25]
+
+list(zip(names, departments, ages))  # ayrı listeleri tek bir liste icerisinde gösterir.
+
+new_sum = lambda a, b: a + b
+new_sum(10, 20)
+
+salaries = [1, 2, 3, 4, 5]
+
+
+def new_salary(salary):
+    return salary * 1.5
+
+
+for salary in salaries:
+    print(new_salary(salary))
+
+
+list(map(new_salary, salaries))  # map: for döngüsü işlevi görür.
+
+list(map(lambda salary: salary * 1.5, salaries))  # lambda: geçici fonksiyon.
+
+list(filter(lambda salary: salary % 2 == 0, salaries))  # filter: if işlevi görür.
+
+from functools import reduce
+reduce(lambda a, b: a + b, salaries)
