@@ -286,7 +286,6 @@ def new_salary(salary):
 for salary in salaries:
     print(new_salary(salary))
 
-
 list(map(new_salary, salaries))  # map: for döngüsü işlevi görür.
 
 list(map(lambda salary: salary * 1.5, salaries))  # lambda: geçici fonksiyon.
@@ -294,4 +293,67 @@ list(map(lambda salary: salary * 1.5, salaries))  # lambda: geçici fonksiyon.
 list(filter(lambda salary: salary % 2 == 0, salaries))  # filter: if işlevi görür.
 
 from functools import reduce
+
 reduce(lambda a, b: a + b, salaries)
+
+[new_salary(salary * 1.5) if salary < 4 else new_salary(salary * 1.2) for salary in
+ salaries]  # else varsa for en sağda.
+# else yoksa if en sağda.
+foods = ['bread', 'meatball', 'soup', 'chicken']
+
+no_foods = ['bread', 'soup']
+
+[food.lower() if food in no_foods else food.upper() for food in foods]
+
+inventory = {'bread': 100,
+             'meatball': 90,
+             'soup': 80,
+             'chicken': 70}
+
+{k: v + 5 for k, v in inventory.items()}
+
+{k.upper(): v for k, v in inventory.items()}
+
+numbers = range(8)
+single = {}
+double = {}
+
+
+def number_splitter():
+    for number in numbers:
+        if number % 2 != 0:
+            single[number] = number + 5
+        else:
+            double[number] = number + 20
+    print("single:", single, "double:", double)
+
+
+number_splitter()
+
+{number: number + 5 if number % 2 != 0 else number + 20 for number in numbers}
+
+import seaborn as sns
+df = sns.load_dataset("car_crashes")
+
+car = []
+
+for col in df.columns:
+    car.append(col.upper())
+
+df.columns = car
+
+df.columns = [col.upper() for col in df.columns]
+
+df.columns = ["FLAG_" + col if "INS" in col else "NO_FLAG_" + col for col in df.columns]
+
+num_cols = [col for col in df.columns if df[col].dtype != "O"]  # köşeli parantez dataframeden değişken seçer.
+
+agg = ['mean', 'min', 'max', 'sum']
+dictionary = {}
+
+for col in num_cols:
+    dictionary[col] = agg
+
+dictionary = {col: agg for col in num_cols}  # sol taraf key, sağ taraf value k:v ya da k = v.
+
+df[num_cols].agg(dictionary)
