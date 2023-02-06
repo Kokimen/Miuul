@@ -63,13 +63,22 @@ departments = ['Mühendislik Fakültesi', 'Tıp Fakültesi']
 
 for index, student in enumerate(students):
     if index < 3:
-        print(f'{departments[0]} {index+1} {student}')
+        print(f'{departments[0]} {index+1}. öğrenci {student}')
     else:
-        print(f'{departments[1]} {index+1} {student}')
+        print(f'{departments[1]} {index+1}. öğrenci {student}')
 
 # SEVEN#
 lesson = ['CMP1005', 'PSY1001', 'HUK1005', 'SEN2204']
 credit = [3, 4, 2, 4]
 limit = [30, 75, 150, 25]
 
-list(zip(credit, lesson, limit))
+for c, l, o in list(zip(credit, lesson, limit)):
+    print(f'Kredisi {c} olan {l} kodlu dersin kontenjanı {o} kişidir')
+
+# EIGHT#
+
+kume1 = {'data', 'python'}
+kume2 = {'data', 'function', 'qcut', 'lambda', 'python', 'miuul'}
+
+kume2.issuperset(kume1)
+kume1.symmetric_difference(kume2)
