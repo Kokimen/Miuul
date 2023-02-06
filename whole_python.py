@@ -314,25 +314,23 @@ inventory = {'bread': 100,
 
 {k.upper(): v for k, v in inventory.items()}
 
-numbers = range(8)
+numbers = range(20)
 single = {}
 double = {}
 
+{double.update({number: number + 5}) if number % 2 != 0
+ else single.update({number: number + 20})
+ for number in numbers}
 
-def number_splitter():
-    for number in numbers:
-        if number % 2 != 0:
-            single[number] = number + 5
-        else:
-            double[number] = number + 20
-    print("single:", single, "double:", double)
-
-
-number_splitter()
-
-{number: number + 5 if number % 2 != 0 else number + 20 for number in numbers}
+for number in numbers:
+    if number % 2 != 0:
+        single[number] = number + 5
+    else:
+        double[number] = number + 20
+print("single:", single, "double:", double)
 
 import seaborn as sns
+
 df = sns.load_dataset("car_crashes")
 
 car = []
