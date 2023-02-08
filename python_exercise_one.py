@@ -67,7 +67,7 @@ for index, student in enumerate(students):
     if index < 3:
         print(f'{departments[0]} {index+1}. öğrenci {student}')
     else:
-        print(f'{departments[1]} {index+1}. öğrenci {student}')
+        print(f'{departments[1]} {index-2}. öğrenci {student}')
 
 # SEVEN#
 lesson = ['CMP1005', 'PSY1001', 'HUK1005', 'SEN2204']

@@ -760,7 +760,7 @@ df[num_cols].agg(new_dict)
 
 # NUMPY#: Listelere göre daha verimli veri saklar, yüksek seviyede vektörel işlemler. Daha hızlı ve sabit tipte veri tutar.
 
-import numpy as np
+import numpy_training as np
 
 a = [1, 2, 3, 4]
 b = [2, 3, 4, 5]
@@ -1032,7 +1032,7 @@ df.loc[:, df.columns.str.contains("age")] = df.loc[:, df.columns.str.contains("a
 # BİRLEŞTİRME İŞLEMLERİ (JOIN)#
 ##############################
 # Concat
-import numpy as np
+import numpy_training as np
 import pandas as pd
 
 m = np.random.randint(1, 30, size = (5, 3))
@@ -1093,7 +1093,7 @@ plt.show()
 
 ##Matplotlib'in Özellikleri##
 import pandas as pd
-import numpy as np
+import numpy_training as np
 import matplotlib.pyplot as plt
 
 pd.set_option("display.max_columns", None)
@@ -1471,7 +1471,7 @@ for col in num_cols:
     target_summary_with_num(df, 'survived', col)
 
 # Korelasyon Analizi#
-import numpy as np
+import numpy_training as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
