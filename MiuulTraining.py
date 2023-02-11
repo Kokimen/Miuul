@@ -1032,7 +1032,7 @@ df.loc[:, df.columns.str.contains("age")] = df.loc[:, df.columns.str.contains("a
 # BİRLEŞTİRME İŞLEMLERİ (JOIN)#
 ##############################
 # Concat
-import numpy_training as np
+import numpy as np
 import pandas as pd
 
 m = np.random.randint(1, 30, size = (5, 3))
