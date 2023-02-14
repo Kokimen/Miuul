@@ -2,7 +2,6 @@
 # Pandas Alıştırmalar
 ##################################################
 
-import numpy as np
 import seaborn as sns
 import pandas as pd
 
@@ -107,43 +106,64 @@ df["age"].fillna(value = df["age"].median(), inplace = True)
 
 df.groupby(['pclass', 'sex'])["survived"].agg(['sum', 'count', 'mean'])
 
-
 #########################################
 # Görev 16:  30 yaşın altında olanlar 1, 30'a eşit ve üstünde olanlara 0 vericek bir fonksiyon yazınız.
-# Yazdığınız fonksiyonu kullanarak titanik veri setinde age_flag adında bir değişken oluşturunuz oluşturunuz. (apply ve lambda yapılarını kullanınız)
+# Yazdığınız fonksiyonu kullanarak titanik veri setinde age_flag adında bir değişken oluşturunuz. (apply ve lambda yapılarını kullanınız)
 #########################################
 
+
+def function(age):
+    if age >= 30:
+        return 1
+    else:
+        return 0
+
+
+df["age_flag"] = df["age"].apply(lambda age: function(age))
+
+df.head()
 
 #########################################
 # Görev 17: Seaborn kütüphanesi içerisinden Tips veri setini tanımlayınız.
 #########################################
 
+df = sns.load_dataset("tips")
+df.head()
 
 #########################################
 # Görev 18: Time değişkeninin kategorilerine (Dinner, Lunch) göre total_bill  değerlerinin toplamını, min, max ve ortalamasını bulunuz.
 #########################################
 
+df.groupby("time")["total_bill"].agg(["min", "max", "mean"])
 
 #########################################
 # Görev 19: Günlere ve time göre total_bill değerlerinin toplamını, min, max ve ortalamasını bulunuz.
 #########################################
 
+df.groupby(["time", "day"])["total_bill"].agg(["sum", "min", "max", "mean"])
 
 #########################################
 # Görev 20:Lunch zamanına ve kadın müşterilere ait total_bill ve tip  değerlerinin day'e göre toplamını, min, max ve ortalamasını bulunuz.
 #########################################
 
+df.groupby(["time", "sex"])["total_bill", "tip"].agg(["sum", "min", "max", "mean"])  # yalnızca kadına bak
+
+df.groupby[(df["time"] == "lunch") & (df["sex"] == "female"), ["total_bill", "tip"]].head()
 
 #########################################
 # Görev 21: size'i 3'ten küçük, total_bill'i 10'dan büyük olan siparişlerin ortalaması nedir?
 #########################################
 
+df[(df["size"] < 3) & (df["total_bill"] > 10)].agg(["mean"])
 
 #########################################
 # Görev 22: total_bill_tip_sum adında yeni bir değişken oluşturun. Her bir müşterinin ödediği totalbill ve tip in toplamını versin.
 #########################################
 
+df["total_bill_tip_sum"] = df["total_bill"] + df["tip"]
 
 #########################################
 # Görev 23: total_bill_tip_sum değişkenine göre büyükten küçüğe sıralayınız ve ilk 30 kişiyi yeni bir dataframe'e atayınız.
 #########################################
+
+new_df = df.groupby(["total_bill_tip_sum"]).head()
