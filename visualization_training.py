@@ -44,3 +44,4 @@ plt.show(block=True)
 df["total_bill"].hist()
 plt.show(block=True)
 
+
