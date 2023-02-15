@@ -146,9 +146,8 @@ df.groupby(["time", "day"])["total_bill"].agg(["sum", "min", "max", "mean"])
 # Görev 20:Lunch zamanına ve kadın müşterilere ait total_bill ve tip  değerlerinin day'e göre toplamını, min, max ve ortalamasını bulunuz.
 #########################################
 
-df.groupby(["time", "sex"])["total_bill", "tip"].agg(["sum", "min", "max", "mean"])  # yalnızca kadına bak
-
-df.groupby[(df["time"] == "lunch") & (df["sex"] == "female"), ["total_bill", "tip"]].head()
+df.loc[(df["sex"] == "Female") & (df["time"] == "Lunch")].groupby("day")["total_bill", "tip"].\
+    agg(['sum', 'min', 'max', 'mean'])
 
 #########################################
 # Görev 21: size'i 3'ten küçük, total_bill'i 10'dan büyük olan siparişlerin ortalaması nedir?
@@ -161,9 +160,10 @@ df[(df["size"] < 3) & (df["total_bill"] > 10)].agg(["mean"])
 #########################################
 
 df["total_bill_tip_sum"] = df["total_bill"] + df["tip"]
+df.head()
 
 #########################################
 # Görev 23: total_bill_tip_sum değişkenine göre büyükten küçüğe sıralayınız ve ilk 30 kişiyi yeni bir dataframe'e atayınız.
 #########################################
 
-new_df = df.groupby(["total_bill_tip_sum"]).head()
+agg_df = df.sort_values("total_bill_tip_sum", ascending = False).head(30)
