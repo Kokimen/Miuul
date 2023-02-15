@@ -167,4 +167,3 @@ df.head()
 #########################################
 
 agg_df = df.sort_values("total_bill_tip_sum", ascending = False).head(30)
-print()
