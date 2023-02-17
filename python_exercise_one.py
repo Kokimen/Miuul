@@ -84,4 +84,3 @@ kume2 = {'data', 'function', 'qcut', 'lambda', 'python', 'miuul'}
 
 kume2.issuperset(kume1)
 kume1.symmetric_difference(kume2)
-
