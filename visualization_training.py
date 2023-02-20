@@ -17,8 +17,8 @@ plt.show(block=True)
 plt.hist(df["age"])
 plt.show(block=True)
 
-plt.boxplot(df["fare"])
-plt.show(block=True)  # aykırı değerleri yakalar
+plt.boxplot(df["fare"])  # aykırı değerleri yakalar
+plt.show(block=True)
 
 home_prices = np.array([1000, 2000, 3000, 4000, 5000])
 car_prices = np.array([800, 1600, 2400, 3200, 4000])
@@ -43,5 +43,3 @@ plt.show(block=True)
 
 df["total_bill"].hist()
 plt.show(block=True)
-
-

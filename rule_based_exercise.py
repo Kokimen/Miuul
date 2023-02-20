@@ -100,6 +100,8 @@ df.groupby("SOURCE")["PRICE"].mean()
 
 df.groupby(["COUNTRY", "SOURCE"])["PRICE"].mean()
 
+df.pivot_table("PRICE", "COUNTRY", "SOURCE", aggfunc = "min")
+
 #############################################
 # GÖREV 2: COUNTRY, SOURCE, SEX, AGE kırılımında ortalama kazançlar nedir?
 #############################################
@@ -112,9 +114,9 @@ df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"])["PRICE"].mean()
 # Önceki sorudaki çıktıyı daha iyi görebilmek için sort_values metodunu azalan olacak şekilde PRICE'a uygulayınız.
 # Çıktıyı agg_df olarak kaydediniz.
 
-
 mean_df = df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"]).agg({"PRICE": "mean"})
-agg_df = mean_df.sort_values("PRICE", ascending = False)
+
+agg_df = df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"]).agg({"PRICE": "mean"}).sort_values("PRICE", ascending = False)
 
 #############################################
 # GÖREV 4: Indekste yer alan isimleri değişken ismine çeviriniz.
@@ -134,6 +136,7 @@ agg_df = agg_df.reset_index().rename(columns={"AGE": "AGE", "COUNTRY": "COUNTRY"
 # Örneğin: '0_18', '19_23', '24_30', '31_40', '41_70'
 
 agg_df["AGE_CAT"] = pd.cut(agg_df["AGE"], bins = [0, 18, 23, 30, 40, 70], labels = ["0_18", "19_23", "24_30", "31_40", "41_70"])
+agg_df.head(10)
 
 #############################################
 # GÖREV 6: Yeni level based müşterileri tanımlayınız ve veri setine değişken olarak ekleyiniz.
@@ -148,7 +151,11 @@ agg_df["CUSTOMERS_LEVEL_BASED"] = ["_".join([country, source, age, age_cat]).upp
                                    for country, source, age, age_cat in
                                    zip(agg_df["COUNTRY"], agg_df["SOURCE"], agg_df["SEX"], agg_df["AGE_CAT"])]
 
-agg_df.groupby("CUSTOMERS_LEVEL_BASED")["PRICE"].mean()
+agg_df["customer_level_based"] = [agg_df["COUNTRY"][i].upper() + "_" + agg_df["SOURCE"][i].upper() + "_" +
+                                  agg_df["SEX"][i] + "_" + agg_df["AGE2"][i] for i in agg_df.index]
+
+agg_df2 = agg_df.groupby("CUSTOMERS_LEVEL_BASED")[["PRICE"]].mean()
+agg_df2.shape
 
 #############################################
 # GÖREV 7: Yeni müşterileri (USA_ANDROID_MALE_0_18) segmentlere ayırınız.
@@ -157,23 +164,19 @@ agg_df.groupby("CUSTOMERS_LEVEL_BASED")["PRICE"].mean()
 # segmentleri "SEGMENT" isimlendirmesi ile agg_df'e ekleyiniz,
 # segmentleri betimleyiniz,
 
-agg_df["SEGMENT"] = pd.qcut(agg_df["PRICE"], 4, labels = ["D", "C", "B", "A"])
+agg_df2["SEGMENT"] = pd.qcut(agg_df2["PRICE"], 4, labels = ["D", "C", "B", "A"])
 
-agg_df.groupby("SEGMENT").agg({"PRICE": ["mean", "max", "sum"]})
+agg_df2.groupby("SEGMENT").agg({"PRICE": ["mean", "max", "sum"]})
 
-agg_df.head(60)
+agg_df2["SEGMENT"].value_counts()
 
 #############################################
 # GÖREV 8: Yeni gelen müşterileri sınıflandırınız ne kadar gelir getirebileceğini tahmin ediniz.
 #############################################
 # 33 yaşında ANDROID kullanan bir Türk kadını hangi segmente aittir ve ortalama ne kadar gelir kazandırması beklenir?
-
-new_user = "TUR_ANDROID_FEMALE_31_40"
-
-agg_df[agg_df["CUSTOMERS_LEVEL_BASED"] == new_user]
-
 # 35 yaşında IOS kullanan bir Fransız kadını hangi segmente ve ortalama ne kadar gelir kazandırması beklenir?
 
+new_user = "TUR_ANDROID_FEMALE_31_40"
 new_user = "FRA_IOS_MALE_31_40"
 
-agg_df[agg_df["CUSTOMERS_LEVEL_BASED"] == new_user]
+agg_df2[agg_df2["CUSTOMERS_LEVEL_BASED"] == new_user]
