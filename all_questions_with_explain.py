@@ -1,4 +1,5 @@
 ﻿##############PYTHON#############
+
 # Question One
 # Examine whole types of variables.
 x = 8
@@ -137,11 +138,55 @@ quota = [30, 75, 150, 25]
 for lesson_code, credit, quota in zip(lesson_code, credit, quota):
     print(f"This is, {lesson_code}, and, credit is, {credit}, for, {quota}, students")
 
-
+#Question Eight
+#If first cluster includes second cluster show common members, if it is not show different members with function.
 ###############################################
-# GÖREV 8: Aşağıda 2 adet set verilmiştir.
-# Sizden istenilen eğer 1. küme 2. kümeyi kapsiyor ise ortak elemanlarını eğer kapsamıyor ise 2. kümenin 1. kümeden farkını yazdıracak fonksiyonu tanımlamanız beklenmektedir.
-###############################################
+cluster_one = {"data", "python"}
+cluster_two = {"data", "function", "qcut", "lambda", "python", "miuul"}
 
-kume1 = set(["data", "python"])
-kume2 = set(["data", "function", "qcut", "lambda", "python", "miuul"])
+# 'issuperset' function queries clusters.
+def cluster_function():
+    #if cluster_one includes cluster_two members, print cluster_one.
+    if cluster_one.issuperset(cluster_two):
+        print(cluster_one)
+    #if it is not print clusters different members.
+    else:
+        print(cluster_two.difference(cluster_one))
+
+
+cluster_function()
+
+##############LIST COMPREHENSIONS#############
+
+#Question One
+#Make numeric values name uppercase and add their per names NUM in car_crash dataset.
+import seaborn as sns
+import pandas as pd
+#I want to see all rows and columns clearly, so remove the limits with none and make width 500.
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 500)
+
+#load dataset from seaborn library.
+df = sns.load_dataset("car_crashes")
+#for see column names.
+df.columns
+#for see column types.
+df.info()
+
+#Queries with in "float64" check which columns are numeric, if dtype catchs the "float64", "num_" will be written and
+#column name will be uppercase, if it is not numeric columns will be uppercase too. For using in, need to str class.
+["NUM_" + col.upper() if str(df[col].dtype) in "float64" else col.upper() for col in df]
+
+#Question Two
+#Write "FLAG" after the names of the variables that not contain "NO".
+#Used "not in" keywords for search that not include "no" words.
+[col.upper() + "_FLAG" if "no" not in col else col.upper() for col in df]
+
+#Question Three
+#Select variables which they are different from below variables and create new dataframe.
+og_list = ["abbrev", "no_previous"]
+#Select variables that not in og_list and assign them to list called new_cols.
+new_cols = [col for col in df if col not in og_list]
+#Create new dataframe as new_df, assign df[new_cols] inside it.
+new_df = df[new_cols]

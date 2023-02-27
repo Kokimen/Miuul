@@ -151,9 +151,6 @@ agg_df["CUSTOMERS_LEVEL_BASED"] = ["_".join([country, source, age, age_cat]).upp
                                    for country, source, age, age_cat in
                                    zip(agg_df["COUNTRY"], agg_df["SOURCE"], agg_df["SEX"], agg_df["AGE_CAT"])]
 
-agg_df["customer_level_based"] = [agg_df["COUNTRY"][i].upper() + "_" + agg_df["SOURCE"][i].upper() + "_" +
-                                  agg_df["SEX"][i] + "_" + agg_df["AGE2"][i] for i in agg_df.index]
-
 agg_df2 = agg_df.groupby("CUSTOMERS_LEVEL_BASED")[["PRICE"]].mean()
 agg_df2.shape
 
