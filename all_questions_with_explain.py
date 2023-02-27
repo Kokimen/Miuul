@@ -190,3 +190,23 @@ og_list = ["abbrev", "no_previous"]
 new_cols = [col for col in df if col not in og_list]
 #Create new dataframe as new_df, assign df[new_cols] inside it.
 new_df = df[new_cols]
+
+##########PANDAS###########
+#Question One
+import seaborn as sns
+import pandas as pd
+
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+pd.set_option('display.width', 500)
+
+df = sns.load_dataset("titanic")
+
+#Question Two
+#Find number of male and women passengers.
+#"value_counts" function give us to number of related dataframe column's variables seperately.
+df["sex"].value_counts()
+
+#Find each unique values number.
+#"nunique" function shows the number of uniques.
+df[df.columns].nunique()
