@@ -26,7 +26,6 @@ df["sex"].value_counts()
 # Görev 3: Her bir sutuna ait unique değerlerin sayısını bulunuz.
 #########################################
 
-df.columns.unique()
 df.columns.nunique()
 
 #########################################
@@ -34,13 +33,11 @@ df.columns.nunique()
 #########################################
 
 df["pclass"].unique()
-df["pclass"].nunique()
 
 #########################################
 # Görev 5:  pclass ve parch değişkenlerinin unique değerlerinin sayısını bulunuz.
 #########################################
 
-df[["pclass", "parch"]].unique()
 df[["pclass", "parch"]].nunique()
 
 #########################################
@@ -108,12 +105,13 @@ df.groupby(['pclass', 'sex'])["survived"].agg(['sum', 'count', 'mean'])
 
 #########################################
 # Görev 16:  30 yaşın altında olanlar 1, 30'a eşit ve üstünde olanlara 0 vericek bir fonksiyon yazınız.
-# Yazdığınız fonksiyonu kullanarak titanik veri setinde age_flag adında bir değişken oluşturunuz. (apply ve lambda yapılarını kullanınız)
+# Yazdığınız fonksiyonu kullanarak titanik veri setinde age_flag adında bir değişken oluşturunuz.
+# (apply ve lambda yapılarını kullanınız)
 #########################################
 
 
 def function(age):
-    if age >= 30:
+    if age <= 30:
         return 1
     else:
         return 0

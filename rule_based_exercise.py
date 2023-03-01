@@ -114,7 +114,6 @@ df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"])["PRICE"].mean()
 # Önceki sorudaki çıktıyı daha iyi görebilmek için sort_values metodunu azalan olacak şekilde PRICE'a uygulayınız.
 # Çıktıyı agg_df olarak kaydediniz.
 
-mean_df = df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"]).agg({"PRICE": "mean"})
 
 agg_df = df.groupby(["COUNTRY", "SOURCE", "SEX", "AGE"]).agg({"PRICE": "mean"}).sort_values("PRICE", ascending = False)
 
@@ -135,7 +134,8 @@ agg_df = agg_df.reset_index().rename(columns={"AGE": "AGE", "COUNTRY": "COUNTRY"
 # Aralıkları ikna edici olacağını düşündüğünüz şekilde oluşturunuz.
 # Örneğin: '0_18', '19_23', '24_30', '31_40', '41_70'
 
-agg_df["AGE_CAT"] = pd.cut(agg_df["AGE"], bins = [0, 18, 23, 30, 40, 70], labels = ["0_18", "19_23", "24_30", "31_40", "41_70"])
+agg_df["AGE_CAT"] = pd.cut(agg_df["AGE"], bins = [0, 18, 23, 30, 40, 70],
+                           labels = ["0_18", "19_23", "24_30", "31_40", "41_70"])
 agg_df.head(10)
 
 #############################################

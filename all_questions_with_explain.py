@@ -1,6 +1,6 @@
 ﻿##############PYTHON#############
 
-# Question One
+# Question 1
 # Examine whole types of variables.
 x = 8
 
@@ -30,14 +30,14 @@ all_of_them = [x, y, z, a, b, c, l, d, t, s]
 # After that I use 'for' loop for every member of the list by list comprehension structures.
 [type(col) for col in all_of_them]
 
-# Question Two
+# Question 2
 # Make all words uppercase, replace comma and dot with space, sparate each word.
 text = "The goal is to turn data into information, and information into insight."
 # Use 'replace' function to change commas and dots. Uppercase the whole sentence with 'upper' and use 'split' to make
 # them show seperately.
 text.replace(".", " ").replace(",", " ").upper().split()
 
-# Question Three
+# Question 3
 lst = ["D", "A", "T", "A", "S", "C", "I", "E", "N", "C", "E"]
 # 3.1 Show how many members in the list.
 # 'Len' function count members in the list.
@@ -64,7 +64,7 @@ lst.append("NTIST")
 # 'Insert' adds the character we give to the index we give.
 lst.insert(8, "N")
 
-# Question Four
+# Question 4
 dictionary = {'Christian': ["America", 18],
               'Daisy': ["England", 12],
               'Antonio': ["Spain", 22],
@@ -89,7 +89,7 @@ dictionary.update({"Ahmet": ["Turkey", 24]})
 # Same as list 'pop' function removes the given key and plus values in the dictionary.
 dictionary.pop("Antonio")
 
-# Question Five
+# Question 5
 # Create function that gets list as argument, seperate single and double numbers as different new list and return them.
 number_list = [2, 13, 18, 93, 22]
 
@@ -113,7 +113,7 @@ def number_seperater(number_list):
 # run the function.
 number_seperater(number_list)
 
-# Question Six
+# Question 6
 # First three students are engineer when other ones are doctor. Ranking them as 1 - 2 - 3 for each job. Use enumerate
 # for print the results as 1 - Engineer Max...
 students = ["Max", "Mex", "Mix", "Ted", "Tex", "Tec"]
@@ -128,7 +128,7 @@ for index, student in enumerate(students):
     else:
         print(f"{index - 2}, {jobs[1]}, {student}")
 
-# Question Seven
+# Question 7
 # Merge the three list.
 lesson_code = ["CMP1005", "PSY1001", "HUK1005", "SEN2204"]
 credit = [3, 4, 2, 4]
@@ -138,7 +138,7 @@ quota = [30, 75, 150, 25]
 for lesson_code, credit, quota in zip(lesson_code, credit, quota):
     print(f"This is, {lesson_code}, and, credit is, {credit}, for, {quota}, students")
 
-#Question Eight
+#Question 8
 #If first cluster includes second cluster show common members, if it is not show different members with function.
 ###############################################
 cluster_one = {"data", "python"}
@@ -158,7 +158,7 @@ cluster_function()
 
 ##############LIST COMPREHENSIONS#############
 
-#Question One
+#Question 1
 #Make numeric values name uppercase and add their per names NUM in car_crash dataset.
 import seaborn as sns
 import pandas as pd
@@ -178,12 +178,12 @@ df.info()
 #column name will be uppercase, if it is not numeric columns will be uppercase too. For using in, need to str class.
 ["NUM_" + col.upper() if str(df[col].dtype) in "float64" else col.upper() for col in df]
 
-#Question Two
+#Question 2
 #Write "FLAG" after the names of the variables that not contain "NO".
 #Used "not in" keywords for search that not include "no" words.
 [col.upper() + "_FLAG" if "no" not in col else col.upper() for col in df]
 
-#Question Three
+#Question 3
 #Select variables which they are different from below variables and create new dataframe.
 og_list = ["abbrev", "no_previous"]
 #Select variables that not in og_list and assign them to list called new_cols.
@@ -192,7 +192,7 @@ new_cols = [col for col in df if col not in og_list]
 new_df = df[new_cols]
 
 ##########PANDAS###########
-#Question One
+#Question 1
 import seaborn as sns
 import pandas as pd
 
@@ -202,11 +202,103 @@ pd.set_option('display.width', 500)
 
 df = sns.load_dataset("titanic")
 
-#Question Two
+#Question 2
 #Find number of male and women passengers.
 #"value_counts" function give us to number of related dataframe column's variables seperately.
 df["sex"].value_counts()
 
+#Question 3
 #Find each unique values number.
 #"nunique" function shows the number of uniques.
 df[df.columns].nunique()
+
+#Question 4
+#Find "pclass" unique values.
+df["pclass"].unique()
+
+#Question 5
+#Find "pclass", "parch" unique values number.
+df[["pclass", "parch"]].nunique()
+
+#Question 6
+#Check "embarked" types. Change the type to category.
+df["embarked"].dtype
+df["embarked"] = df["embarked"].astype("category")
+
+#Question 7
+#Shows only embarked "C" values.
+df.loc[df["embarked"] == "C"].head()
+
+#Question 8
+#Show only embarked not "S" values.
+df.loc[df["embarked"] != "S"].head()
+
+#Question 9
+#Shows age lower than 30 and gender female.
+df.loc[(df["age"] < 30) & (df["sex"] == "female"), ["age", "sex"]].head()
+
+#Question 10
+#Show fare more than 500 and age more than 70.
+df.loc[(df["fare"] > 500) & (df["age"] > 70), ["fare", "age"]].head(),
+
+#Question 11
+#Find sum of null values for each variable.
+#We can check null cells by "isnull".
+df[df.columns].isnull().sum()
+
+#Question 12
+#Delete who's variable from dataframe.
+df = df.drop("who", axis = 1)
+
+#Question 13
+#Fill deck's empty values with deck's mode.
+#Fillna function can fill the null cells.
+df["deck"] = df["deck"].fillna(df["deck"].mode().iloc[0])
+
+#Question 14
+#Fill age's empty values with age's median.
+df["age"] = df["age"].fillna(df["age"].median())
+
+#Question 15
+#Find the sum, count, mean values of the pclass and gender variables of the survived variable.
+df.groupby(["sex", "pclass"]).agg({"survived": ["mean", "sum", "count"]})
+
+#Question 16
+#Write a function that returns 1 for those under 30, 0 for those equal to or above 30.
+
+#first I wrote a function that return one and zero about age variable.
+def zero_one(age):
+    if age < 30:
+        return 1
+    else:
+        return 0
+
+#Creating new df, using apply/lambda for temporary function.
+df["age_flag"] = df["age"].apply(lambda age: zero_one(age))
+
+#Question 17
+df = sns.load_dataset("tips")
+
+#Question 18
+#Find the sum, min, max and average of the total_bill values according to the categories of the time variable.
+df.groupby("time").agg({"total_bill": ["sum", "min", "max", "mean"]})
+
+#Question 19
+#Find the sum, min, max and average of the total_bill values according to the categories of the time & day variable.
+df.groupby(["time", "day"]).agg({"total_bill": ["sum", "min", "max", "mean"]})
+
+#Question 20
+#Find the sum, min, max and average of the total_bill and type values of the
+#lunchtime and female customers according to the day.
+df.loc[(df["sex"] == "Female") & (df["time"] == "Lunch")].\
+    groupby("day").\
+    agg({"total_bill": ['sum', 'min', 'max', 'mean'],
+                "tip": ['sum', 'min', 'max', 'mean']})
+
+#Question 21
+
+
+#Question 22
+
+
+#Question 23
