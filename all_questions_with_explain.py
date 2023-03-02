@@ -49,7 +49,7 @@ len(lst)
 lst[0:11:10]
 
 # 3.3 Create ["D","A","T","A"] list from the lst.
-# Slicing(:) give us the members of the list from zero to four.
+# Slicing: give us the members of the list from zero to four.
 lst[0:4]
 
 # 3.4 Delete 8th index member.
