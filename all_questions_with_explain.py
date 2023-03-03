@@ -296,9 +296,13 @@ df.loc[(df["sex"] == "Female") & (df["time"] == "Lunch")].\
                 "tip": ['sum', 'min', 'max', 'mean']})
 
 #Question 21
-
+#Find average of orders which size lower than 3 and total_bill more than 10 with using loc.
+df.loc[(df["size"] < 3) & (df["total_bill"] > 10)].head()
 
 #Question 22
-
+#Create new variable and, it should give sum of total_bill and tip for each customer.
+df["total_bill_tip_sum"] = df["total_bill"] + df["tip"]
 
 #Question 23
+#sort new variable as descending and show first 30 customer.
+sort_df = df.sort_values("total_bill_tip_sum", ascending = False).head(30)
