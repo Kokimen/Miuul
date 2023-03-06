@@ -57,7 +57,6 @@ group_sort(df)
 
 
 def calculate_rfm_metric():
-
     today_date = dt.datetime(2021, 6, 1)
     rfm = df.groupby("master_id").agg({"last_order_date": lambda last_order_date: (today_date - last_order_date),
                                        "customer_sum_shopping": lambda customer_sum_shopping: customer_sum_shopping,
@@ -96,7 +95,7 @@ def create_segment():
         r'51': 'new_customers',
         r'[4-5][2-3]': 'potential_loyalists',
         r'5[4-5]': 'champions'
-        }
+    }
 
     rfm["segment"] = rfm["RF_SCORE"].replace(segment_map, regex = True)
     rfm[["segment", "recency", "frequency", "monetary"]]
@@ -108,12 +107,11 @@ create_segment()
 
 
 def special_customers(csv=False):
-
     new_rfm_df = df.merge(rfm, on = "master_id")
 
     new_rfm_df_female = new_rfm_df.loc[((new_rfm_df["segment"] == "loyal_customers") |
-                        (new_rfm_df["segment"] == "champions")) &
-                        (new_rfm_df["interested_in_categories_12"].str.contains("KADIN"))]
+                                        (new_rfm_df["segment"] == "champions")) &
+                                       (new_rfm_df["interested_in_categories_12"].str.contains("KADIN"))]
 
     if csv:
         new_rfm_df_female["master_id"].to_csv("rfm_special_customers.csv")
@@ -125,14 +123,13 @@ new_rfm_df_female = special_customers()
 
 
 def special_customers_two(csv=False):
-
     new_rfm_df = df.merge(rfm, on = "master_id")
 
     new_rfm_df_manchi = new_rfm_df.loc[((new_rfm_df["segment"] == "cant_lose") |
-                        (new_rfm_df["segment"] == "about_to_sleep") |
-                        (new_rfm_df["segment"] == "new_customers")) &
-                        ((new_rfm_df["interested_in_categories_12"].str.contains("ERKEK")) |
-                        (new_rfm_df["interested_in_categories_12"].str.contains("COCUK")))]
+                                        (new_rfm_df["segment"] == "about_to_sleep") |
+                                        (new_rfm_df["segment"] == "new_customers")) &
+                                       ((new_rfm_df["interested_in_categories_12"].str.contains("ERKEK")) |
+                                        (new_rfm_df["interested_in_categories_12"].str.contains("COCUK")))]
 
     if csv:
         new_rfm_df_manchi["master_id"].to_csv("rfm_special_customers_two.csv")
@@ -141,5 +138,3 @@ def special_customers_two(csv=False):
 
 
 new_rfm_df_manchi = special_customers_two()
-
-
