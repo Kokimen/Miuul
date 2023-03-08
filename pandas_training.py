@@ -70,7 +70,7 @@ df.loc[df["age"] > 50, ["class", "age"]].head()  # yaşı 50'den büyüklerin s�
 df_new = df.loc[(df["age"] > 50) &
                 (df["sex"] == "male") &
                 ((df["embark_town"] == "Cherbourg") |
-                 (df["embark_town"] == "Southampton")),
+                (df["embark_town"] == "Southampton")),
                 ["class", "age", "embark_town"]].head()
 
 df_new["embark_town"].value_counts()
