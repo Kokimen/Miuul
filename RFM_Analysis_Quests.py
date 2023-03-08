@@ -94,7 +94,3 @@ def prepare_data(dataframe, csv=False):
 
 
 new_rfm_df_manchi = prepare_data(df)
-
-cumle = "anasına bak kızını al"
-degisim = cumle.replace("ana", "mentoru").replace("kizini", "ogrencisini")
-print(degisim)
