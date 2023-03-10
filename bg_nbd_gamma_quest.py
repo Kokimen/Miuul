@@ -11,10 +11,11 @@ df = df_.copy()
 
 def main():
     # Setting options
+    pd.options.mode.chained_assignment = None
     pd.set_option("display.max_columns", 20)
     pd.set_option("display.max_rows", 20)
     pd.set_option('display.width', 200)
-    pd.options.mode.chained_assignment = None
+
     pd.set_option("display.float_format", lambda x: "%.3f" % x)
 
 

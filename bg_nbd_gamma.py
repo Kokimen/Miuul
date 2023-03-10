@@ -173,7 +173,6 @@ def create_cltv_p(dataframe, month=3):
 
     today_date = dt.datetime(2011, 12, 11)
 
-
     cltv_df = dataframe.groupby("Customer ID").agg({"InvoiceDate": [
         lambda invoicedate: (invoicedate.max() - invoicedate.min()).days,
         lambda invoicedate: (today_date - invoicedate.min()).days],
