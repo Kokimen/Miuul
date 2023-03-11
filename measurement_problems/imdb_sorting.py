@@ -9,6 +9,7 @@ pd.set_option("display.max_columns", 20)
 pd.set_option("display.max_rows", 20)
 pd.set_option('display.width', 200)
 pd.set_option("display.expand_frame_repr", False)
+pd.options.mode.chained_assignment = None
 pd.set_option("display.float_format", lambda x: "%.2f" % x)
 
 df = pd.read_csv("datasets/movies_metadata.csv", low_memory = False)
@@ -60,19 +61,21 @@ df.sort_values(by = "weighted_rating", ascending = False).head(20)
 def bayesian_average_rating(n, confidence=0.95):  # puanların dağılımı üzerinden ortalama hesaplar. n means stars.
     if sum(n) == 0:
         return 0
-    k = len(n)
+    K = len(n)
     z = st.norm.ppf(1 - (1 - confidence) / 2)
-    n = sum(n)
+    N = sum(n)
     first_part = 0.0
     second_part = 0.0
     for k, n_k in enumerate(n):
-        first_part += (k + 1) * (n[k] + 1) / (n + k)
-        second_part += (k + 1) * (k + 1) * (n[k] + 1) / (n + k)
-    score = first_part - z * math.sqrt((second_part - first_part * first_part) / (n + k + 1))
+        first_part += (k + 1) * (n[k] + 1) / (N + K)
+        second_part += (k + 1) * (k + 1) * (n[k] + 1) / (N + K)
+    score = first_part - z * math.sqrt((second_part - first_part * first_part) / (N + K + 1))
     return score
 
 
 bayesian_average_rating([34733, 4355, 4704, 6561, 13515, 26183, 87368, 273082, 600260, 1295351])
+
+df = pd.read_csv("datasets/imdb_ratings.csv")
 
 df["bar_score"] = df.apply(lambda x: bayesian_average_rating(x[["one", "two", "three", "four", "five",
                                                                 "six", "seven", "eight", "nine", "ten"]]), axis = 1)
