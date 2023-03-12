@@ -51,10 +51,11 @@ print("Test Stat = %.4f, p-value = %.4f" % (test_stat, pvalue))
 # p-value 0.34 çıktığı için H0 reddedilemez.
 # Dolayısıyla maximum ve average bidding yöntemleri arasında satın alma bağlamında anlamlı bir farklılık görülememiştir.
 
-# Recommends to Customer There is no need to use the average bidding method, which is the product of a new investment
-# and effort, instead of maximum bidding, which is currently used and has various functions. Because there was no
-# significant difference between the two bidding methods. Therefore, the transformation of investments to be made on
-# average bidding will not be positive for the company.
+# Recommends to Customer
+# There is no need to use the average bidding method, which is the product of a new investment and effort, instead of
+# maximum bidding, which is currently used and has various functions. Because there was no significant difference
+# between the two bidding methods. Therefore, the transformation of investments to be made on average bidding will
+# not be positive for the company.
 
 # If it is believed that the average bidding method will achieve better results, the available data should be
 # expanded. 40 of each bidding method reduces the data confidence interval rate. By collecting much more data,
