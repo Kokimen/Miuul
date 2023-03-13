@@ -24,15 +24,16 @@ control_df = pd.read_excel("datasets/ab_testing.xlsx", sheet_name = "control")
 test_df = pd.read_excel("datasets/ab_testing.xlsx", sheet_name = "test")
 control_df["Bidding"] = "Maximum Bid"
 test_df["Bidding"] = "Average Bid"
-df = pd.concat([control_df, test_df])
+df = pd.concat([control_df, test_df], ignore_index = True)
 df.info()
+df.head()
 # Hyphotesis Test
 # H0: M1=M2 (iki tasarım arasında satın alma dönüşüm farklılıkları yoktur)
 df["Purchase"].mean()  # -> 550.89 - 582.10
 
 test_stat, pvalue = shapiro(df.loc[df["Bidding"] == "Maximum Bid", "Purchase"])
 print("Test Stat = %.4f, p-value = %.4f" % (test_stat, pvalue))
-# p-value 0.5 çıktığı için H0 reddedilemez. Normal dağılım vardır.
+# p-value 0.58 çıktığı için H0 reddedilemez. Normal dağılım vardır.
 test_stat, pvalue = shapiro(df.loc[df["Bidding"] == "Average Bid", "Purchase"])
 print("Test Stat = %.4f, p-value = %.4f" % (test_stat, pvalue))
 # p-value 0.15 çıktığı için H0 reddedilemez. Normal dağılım vardır.
