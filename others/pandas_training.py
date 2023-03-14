@@ -1,6 +1,7 @@
 import pandas as pd
 import seaborn as sns
 import numpy as np
+
 s = pd.Series([1, 2, 3, 4, 5, 6])
 type(s)  # pandas.cores.series.Series
 s.index  # start 0, stop 6, step 1
@@ -70,7 +71,7 @@ df.loc[df["age"] > 50, ["class", "age"]].head()  # yaşı 50'den büyüklerin s�
 df_new = df.loc[(df["age"] > 50) &
                 (df["sex"] == "male") &
                 ((df["embark_town"] == "Cherbourg") |
-                (df["embark_town"] == "Southampton")),
+                 (df["embark_town"] == "Southampton")),
                 ["class", "age", "embark_town"]].head()
 
 df_new["embark_town"].value_counts()
@@ -89,7 +90,7 @@ df.groupby(["sex", "embark_town", "class"]).agg(dict(age = "mean", survived = "m
 
 df.pivot_table("survived", "sex", "embarked")  # ön tanımlı mean alır
 
-df.pivot_table("survived", "sex", "embarked", aggfunc = "std")   # standard sapma aldırdık
+df.pivot_table("survived", "sex", "embarked", aggfunc = "std")  # standard sapma aldırdık
 
 df.pivot_table("survived", "sex", ["embarked", "class"])
 
@@ -99,8 +100,8 @@ df.pivot_table("survived", "sex", ["new_age", "class"])  # kesişim, satır, sü
 
 pd.set_option("display.width", 100)
 
-df["age2"] = df["age"]*2
-df["age3"] = df["age"]*5
+df["age2"] = df["age"] * 2
+df["age3"] = df["age"] * 5
 
 df.head()
 
@@ -110,11 +111,11 @@ for col in df.columns:
 
 for col in df.columns:
     if "age" in col:
-        df[col] = df[col]/10
+        df[col] = df[col] / 10
 
-df[["age", "age2", "age3"]].apply(lambda x: x/10).head()
+df[["age", "age2", "age3"]].apply(lambda x: x / 10).head()
 
-df.loc[:, df.columns.str.contains("age")].apply(lambda x: x/10).head()
+df.loc[:, df.columns.str.contains("age")].apply(lambda x: x / 10).head()
 
 df.loc[:, df.columns.str.contains("age")].apply(lambda x: (x - x.mean()) / x.std()).head()
 
@@ -129,14 +130,14 @@ df.loc[:, df.columns.str.contains("age")] = \
     df.loc[:, df.columns.str.contains("age")].apply(standart_scaler).head()  # işlemi kaydetmek için
 
 m = np.random.randint(1, 30, (5, 3))
-df1 = pd.DataFrame(m, columns=["var1", "var2", "var3"])
+df1 = pd.DataFrame(m, columns = ["var1", "var2", "var3"])
 df2 = df1 + 99
 
 pd.concat([df1, df2], ignore_index = True)  # indexleri düzeltir
 
-df1 = pd.DataFrame({"name": ["a", "ab", "abc", "abcd"],
+df1 = pd.DataFrame({"name": ["ayşe", "ab", "taş", "abcd"],
                     "job": ["a", "ab", "abc", "abcd"]})
-df2 = pd.DataFrame({"name": ["a", "ab", "abc", "abcd"],
+df2 = pd.DataFrame({"name": ["ükmek", "ab", "abc", "abcd"],
                     "date": [2010, 2011, 2012, 2013]})
 df3 = pd.merge(df1, df2)
 pd.merge(df1, df2, on = "name")

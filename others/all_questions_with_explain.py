@@ -134,22 +134,23 @@ lesson_code = ["CMP1005", "PSY1001", "HUK1005", "SEN2204"]
 credit = [3, 4, 2, 4]
 quota = [30, 75, 150, 25]
 
-#I use zip for easy to process to for loop. The loop walks through every member of list and print them seperately.
+# I use zip for easy to process to for loop. The loop walks through every member of list and print them seperately.
 for lesson_code, credit, quota in zip(lesson_code, credit, quota):
     print(f"This is, {lesson_code}, and, credit is, {credit}, for, {quota}, students")
 
-#Question 8
-#If first cluster includes second cluster show common members, if it is not show different members with function.
+# Question 8
+# If first cluster includes second cluster show common members, if it is not show different members with function.
 ###############################################
 cluster_one = {"data", "python"}
 cluster_two = {"data", "function", "qcut", "lambda", "python", "miuul"}
 
+
 # 'issuperset' function queries clusters.
 def cluster_function():
-    #if cluster_one includes cluster_two members, print cluster_one.
+    # if cluster_one includes cluster_two members, print cluster_one.
     if cluster_one.issuperset(cluster_two):
         print(cluster_one)
-    #if it is not print clusters different members.
+    # if it is not print clusters different members.
     else:
         print(cluster_two.difference(cluster_one))
 
@@ -158,41 +159,42 @@ cluster_function()
 
 ##############LIST COMPREHENSIONS#############
 
-#Question 1
-#Make numeric values name uppercase and add their per names NUM in car_crash dataset.
+# Question 1
+# Make numeric values name uppercase and add their per names NUM in car_crash dataset.
 import seaborn as sns
 import pandas as pd
-#I want to see all rows and columns clearly, so remove the limits with none and make width 500.
+
+# I want to see all rows and columns clearly, so remove the limits with none and make width 500.
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 500)
 
-#load dataset from seaborn library.
+# load dataset from seaborn library.
 df = sns.load_dataset("car_crashes")
-#for see column names.
+# for see column names.
 df.columns
-#for see column types.
+# for see column types.
 df.info()
 
-#Queries with in "float64" check which columns are numeric, if dtype catchs the "float64", "num_" will be written and
-#column name will be uppercase, if it is not numeric columns will be uppercase too. For using in, need to str class.
+# Queries with in "float64" check which columns are numeric, if dtype catchs the "float64", "num_" will be written and
+# column name will be uppercase, if it is not numeric columns will be uppercase too. For using in, need to str class.
 ["NUM_" + col.upper() if str(df[col].dtype) in "float64" else col.upper() for col in df]
 
-#Question 2
-#Write "FLAG" after the names of the variables that not contain "NO".
-#Used "not in" keywords for search that not include "no" words.
+# Question 2
+# Write "FLAG" after the names of the variables that not contain "NO".
+# Used "not in" keywords for search that not include "no" words.
 [col.upper() + "_FLAG" if "no" not in col else col.upper() for col in df]
 
-#Question 3
-#Select variables which they are different from below variables and create new dataframe.
+# Question 3
+# Select variables which they are different from below variables and create new dataframe.
 og_list = ["abbrev", "no_previous"]
-#Select variables that not in og_list and assign them to list called new_cols.
+# Select variables that not in og_list and assign them to list called new_cols.
 new_cols = [col for col in df if col not in og_list]
-#Create new dataframe as new_df, assign df[new_cols] inside it.
+# Create new dataframe as new_df, assign df[new_cols] inside it.
 new_df = df[new_cols]
 
 ##########PANDAS###########
-#Question 1
+# Question 1
 import seaborn as sns
 import pandas as pd
 
@@ -202,107 +204,109 @@ pd.set_option('display.width', 500)
 
 df = sns.load_dataset("titanic")
 
-#Question 2
-#Find number of male and women passengers.
-#"value_counts" function give us to number of related dataframe column's variables seperately.
+# Question 2
+# Find number of male and women passengers.
+# "value_counts" function give us to number of related dataframe column's variables seperately.
 df["sex"].value_counts()
 
-#Question 3
-#Find each unique values number.
-#"nunique" function shows the number of uniques.
+# Question 3
+# Find each unique values number.
+# "nunique" function shows the number of uniques.
 df[df.columns].nunique()
 
-#Question 4
-#Find "pclass" unique values.
+# Question 4
+# Find "pclass" unique values.
 df["pclass"].unique()
 
-#Question 5
-#Find "pclass", "parch" unique values number.
+# Question 5
+# Find "pclass", "parch" unique values number.
 df[["pclass", "parch"]].nunique()
 
-#Question 6
-#Check "embarked" types. Change the type to category.
+# Question 6
+# Check "embarked" types. Change the type to category.
 df["embarked"].dtype
 df["embarked"] = df["embarked"].astype("category")
 
-#Question 7
-#Shows only embarked "C" values.
+# Question 7
+# Shows only embarked "C" values.
 df.loc[df["embarked"] == "C"].head()
 
-#Question 8
-#Show only embarked not "S" values.
+# Question 8
+# Show only embarked not "S" values.
 df.loc[df["embarked"] != "S"].head()
 
-#Question 9
-#Shows age lower than 30 and gender female.
+# Question 9
+# Shows age lower than 30 and gender female.
 df.loc[(df["age"] < 30) & (df["sex"] == "female"), ["age", "sex"]].head()
 
-#Question 10
-#Show fare more than 500 and age more than 70.
+# Question 10
+# Show fare more than 500 and age more than 70.
 df.loc[(df["fare"] > 500) & (df["age"] > 70), ["fare", "age"]].head(),
 
-#Question 11
-#Find sum of null values for each variable.
-#We can check null cells by "isnull".
+# Question 11
+# Find sum of null values for each variable.
+# We can check null cells by "isnull".
 df[df.columns].isnull().sum()
 
-#Question 12
-#Delete who's variable from dataframe.
+# Question 12
+# Delete who's variable from dataframe.
 df = df.drop("who", axis = 1)
 
-#Question 13
-#Fill deck's empty values with deck's mode.
-#Fillna function can fill the null cells.
+# Question 13
+# Fill deck's empty values with deck's mode.
+# Fillna function can fill the null cells.
 df["deck"] = df["deck"].fillna(df["deck"].mode().iloc[0])
 
-#Question 14
-#Fill age's empty values with age's median.
+# Question 14
+# Fill age's empty values with age's median.
 df["age"] = df["age"].fillna(df["age"].median())
 
-#Question 15
-#Find the sum, count, mean values of the pclass and gender variables of the survived variable.
+# Question 15
+# Find the sum, count, mean values of the pclass and gender variables of the survived variable.
 df.groupby(["sex", "pclass"]).agg({"survived": ["mean", "sum", "count"]})
 
-#Question 16
-#Write a function that returns 1 for those under 30, 0 for those equal to or above 30.
 
-#first I wrote a function that return one and zero about age variable.
+# Question 16
+# Write a function that returns 1 for those under 30, 0 for those equal to or above 30.
+
+# first I wrote a function that return one and zero about age variable.
 def zero_one(age):
     if age < 30:
         return 1
     else:
         return 0
 
-#Creating new df, using apply/lambda for temporary function.
+
+# Creating new df, using apply/lambda for temporary function.
 df["age_flag"] = df["age"].apply(lambda age: zero_one(age))
 
-#Question 17
+# Question 17
 df = sns.load_dataset("tips")
 
-#Question 18
-#Find the sum, min, max and average of the total_bill values according to the categories of the time variable.
+# Question 18
+# Find the sum, min, max and average of the total_bill values according to the categories of the time variable.
 df.groupby("time").agg({"total_bill": ["sum", "min", "max", "mean"]})
 
-#Question 19
-#Find the sum, min, max and average of the total_bill values according to the categories of the time & day variable.
+# Question 19
+# Find the sum, min, max and average of the total_bill values according to the categories of the time & day variable.
 df.groupby(["time", "day"]).agg({"total_bill": ["sum", "min", "max", "mean"]})
 
-#Question 20
-#Find the sum, min, max and average of the total_bill and type values of the
-#lunchtime and female customers according to the day.
-df.loc[(df["sex"] == "Female") & (df["time"] == "Lunch")].\
-    groupby("day").\
+# Question 20
+# Find the sum, min, max and average of the total_bill and type values of the
+# lunchtime and female customers according to the day.
+df.loc[(df["sex"] == "Female") & (df["time"] == "Lunch")]. \
+    groupby("day"). \
     agg({"total_bill": ['sum', 'min', 'max', 'mean'],
-                "tip": ['sum', 'min', 'max', 'mean']})
+         "tip": ['sum', 'min', 'max', 'mean']})
 
-#Question 21
-#Find average of orders which size lower than 3 and total_bill more than 10 with using loc.
+# Question 21
+# Find average of orders which size lower than 3 and total_bill more than 10 with using loc.
 df.loc[(df["size"] < 3) & (df["total_bill"] > 10)].head()
 
-#Question 22
-#Create new variable and, it should give sum of total_bill and tip for each customer.
+# Question 22
+# Create new variable and, it should give sum of total_bill and tip for each customer.
 df["total_bill_tip_sum"] = df["total_bill"] + df["tip"]
 
-#Question 23
-#sort new variable as descending and show first 30 customer.
+# Question 23
+# sort new variable as descending and show first 30 customer.
 sort_df = df.sort_values("total_bill_tip_sum", ascending = False).head(30)

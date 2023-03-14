@@ -27,13 +27,13 @@ d = a * 5 - c
 # conda install numpy scipy pandas
 
 # delete package
-#conda remove numpy
+# conda remove numpy
 
 # install another version of package
-#conda install numpy = 1.20.1
+# conda install numpy = 1.20.1
 
 # upgrade package
-#conda upgrade numpy
+# conda upgrade numpy
 
 # upgrade all packages
 # conda upgrade - all
@@ -350,7 +350,7 @@ def divide(a, b):
 divide(1, 2)
 
 
-def divide(a, b = 1):  # -->we can enter default values to beginner people
+def divide(a, b=1):  # -->we can enter default values to beginner people
     print(a / b)
 
 
@@ -714,7 +714,6 @@ A = []
 
 df.columns = A
 
-
 # İsminde INS olan değişkenlerin başına Flag olmayanlarınkine No_Flag eklemek
 
 ["FLAG " + col if col.__contains__("ins") else "NO_FLAG " + col for col in df.columns]
@@ -740,7 +739,7 @@ soz = {}
 agg_list = ["mean", "min", "max", "sum"]
 
 for col in num_cols:
-    soz[col] = agg_list #key değeri soz[col], value değeri agg_list
+    soz[col] = agg_list  # key değeri soz[col], value değeri agg_list
 
 new_dict = {col: agg_list for col in num_cols}
 
@@ -766,7 +765,7 @@ a = [1, 2, 3, 4]
 b = [2, 3, 4, 5]
 ab = []
 
-[ab.append(a[i]*b[i]) for i in range(len(a))]
+[ab.append(a[i] * b[i]) for i in range(len(a))]
 
 # numpy hali
 a = np.array([1, 2, 3, 4])
@@ -1315,6 +1314,7 @@ def num_summary(dataframe, numerical_col, plot=False):
         plt.title(numerical_col)
         plt.show(block = True)
 
+
 num_summary(df, "age", plot = True)
 
 for col in num_cols:
@@ -1329,7 +1329,6 @@ pd.set_option('display.width', 500)
 df = sns.load_dataset('titanic')
 df.head()
 df.info()
-
 
 
 # eşsiz değer sayısı 10'dan küçükse kategorik değişken muamelesi yapacağız, eğer 20 den büyükse cardinal değişken
