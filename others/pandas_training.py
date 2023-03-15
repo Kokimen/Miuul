@@ -135,9 +135,9 @@ df2 = df1 + 99
 
 pd.concat([df1, df2], ignore_index = True)  # indexleri düzeltir
 
-df1 = pd.DataFrame({"name": ["ayşe", "ab", "taş", "abcd"],
+df1 = pd.DataFrame({"name": ["a", "ab", "taş", "abcd"],
                     "job": ["a", "ab", "abc", "abcd"]})
-df2 = pd.DataFrame({"name": ["ükmek", "ab", "abc", "abcd"],
+df2 = pd.DataFrame({"name": ["a", "ab", "abc", "abcd"],
                     "date": [2010, 2011, 2012, 2013]})
 df3 = pd.merge(df1, df2)
 pd.merge(df1, df2, on = "name")
