@@ -20,7 +20,7 @@ def pd_options():
 pd_options()
 
 # Read the data
-df = pd.read_csv("datasets/kaggle/movie_industry.csv")
+df = pd.read_csv("../datasets/kaggle/movie_industry.csv")
 
 # Explore the data
 df.info()
