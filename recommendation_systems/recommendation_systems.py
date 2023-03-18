@@ -60,6 +60,7 @@ def create_invoice_product_df(dataframe, id=False):
 
 
 fr_inv_pro_df = create_invoice_product_df(df_fr, True)
+fr_inv_pro_df
 
 
 # Product name query from stock number (bonus)
@@ -135,7 +136,6 @@ get_recommendation(rules, 22492, 1)
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import numpy as np
 
 df = pd.read_csv("datasets/kaggle/movies_metadata.csv", low_memory = False)  # ignore dtype errors
 

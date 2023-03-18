@@ -1,11 +1,5 @@
 # Import libraries
-import datetime
 import pandas as pd
-import seaborn as sns
-import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import figure
 
 
 def pd_options():
@@ -20,7 +14,7 @@ def pd_options():
 pd_options()
 
 # Read the data
-df = pd.read_csv("../datasets/kaggle/movie_industry.csv")
+df = pd.read_csv("datasets/kaggle/movie_industry.csv")
 
 # Explore the data
 df.info()
