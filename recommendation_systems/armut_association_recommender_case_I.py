@@ -53,6 +53,7 @@ frequent_itemsets = apriori(basket_service_df.astype("bool"),
 rules = association_rules(frequent_itemsets,
                           metric = "support",
                           min_threshold = .01)
+
 rules.sort_values("support", ascending = False)
 
 
