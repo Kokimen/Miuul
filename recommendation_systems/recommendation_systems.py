@@ -130,3 +130,64 @@ def get_recommendation(rules_df, product_id, rec_count=1):
 
 
 get_recommendation(rules, 22492, 1)
+
+# 1. Create TF-IDF Matrix
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+import numpy as np
+
+df = pd.read_csv("datasets/kaggle/movies_metadata.csv", low_memory = False)  # ignore dtype errors
+
+df["overview"].head()
+# delete not measurable words
+tfidf = TfidfVectorizer(stop_words = "english")
+df[df["overview"].isnull()]
+df["overview"] = df["overview"].fillna(" ")
+tfidf_matrix = tfidf.fit_transform(df["overview"])
+tfidf.get_feature_names_out()
+tfidf_matrix.toarray()
+
+# 2. Create Cosine-Similarity Matrix
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+cosine_sim.shape
+
+# 3. Recommendation related to sameness
+indices = pd.Series(df.index, index = df["title"])
+# looking for just last movie
+indices = indices[~indices.index.duplicated(keep = "last")]
+
+movie_index = indices["Sherlock Holmes"]
+cosine_sim[movie_index]
+similarity_scores = pd.DataFrame(cosine_sim[movie_index], columns = ["score"])
+# started from one because 0 is self
+movie_indices = similarity_scores.sort_values("score", ascending = False)[1:11].index
+df["title"].iloc[movie_indices]
+
+
+# 4. Work Script
+def content_based_recommender(title, cosine_sim, dataframe):
+    # creating index
+    indices = pd.Series(dataframe.index, index = dataframe["title"])
+    indices = indices[~indices.index.duplicated(keep = "last")]
+    # catches title index
+    movie_index = indices[title]
+    # calculate scores related to title
+    similarity_scores = pd.DataFrame(cosine_sim[movie_index], columns = ["score"])
+    # show first ten movies except self
+    movie_indices = similarity_scores.sort_values("score", ascending = False)[1:11].index
+    return dataframe["title"].iloc[movie_indices]
+
+
+content_based_recommender("The Matrix", cosine_sim, df)
+
+
+def calculate_cosine_sim(dataframe):
+    tfidf = TfidfVectorizer(stop_words = "english")
+    dataframe["overview"] = dataframe["overview"].fillna(" ")
+    tfidf_matrix = tfidf.fit_transform(dataframe["overview"])
+    cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+    return cosine_sim
+
+
+cosine_sim = calculate_cosine_sim(df)
