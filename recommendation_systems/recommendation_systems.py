@@ -241,7 +241,7 @@ def item_based_recommender(movie_name, user_movie_df):
 item_based_recommender(movie_name, user_movie_df)
 movie_name = pd.Series(user_movie_df.columns).sample(1).values[0]
 
-# User-Based-Collaborative Filtering
+# User-Based-Collaborative Filtering #
 
 # 1. Prepare DataFrames
 movie = pd.read_csv("datasets/kaggle/movie.csv")
@@ -293,7 +293,7 @@ corr_df = corr_df.reset_index()
 top_users = corr_df[(corr_df["user_id_1"] == random_user) & (corr_df["corr"] >= .4)][
     ["user_id_2", "corr"]].reset_index(drop = True)
 top_users = top_users.sort_values("corr", ascending = False)
-top_users = top_users.rename(columns = {"user_id_2": "userId", "sameness": "correlation"})
+top_users = top_users.rename(columns = {"user_id_2": "userId", "corr": "correlation"})
 
 top_users_ratings = top_users.merge(rating[["userId", "movieId", "rating"]], how = "inner")
 top_users_ratings = top_users_ratings[top_users_ratings["userId"] != random_user]
@@ -355,3 +355,5 @@ def user_based_recommender(random_user, user_movie_df, ratio=.6, cor_th=.4, scor
 
 random_user = int(pd.Series(user_movie_df.index).sample(1).values)
 user_based_recommender(random_user, user_movie_df)
+
+# Model Based Matrix Factorization #
