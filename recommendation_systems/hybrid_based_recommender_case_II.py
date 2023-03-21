@@ -139,5 +139,3 @@ def item_based_recommender(movie_name, user_movie_df):
 
 
 item_based_recommender(movie_name, user_movie_df)
-
-# Make an item-based suggestion based on the most recent and highest rated movie the user has watched

@@ -1,6 +1,8 @@
 ﻿# 1. Data Pre-Process
 import pandas as pd
 from mlxtend.frequent_patterns import apriori, association_rules
+from send2trash.plat_other import uid
+from surprise import Reader, Dataset
 
 
 def pd_options():
@@ -104,7 +106,7 @@ def check_id(dataframe, stock_code):
 
 def create_rules(dataframe, id=True, country="France"):
     dataframe = dataframe[dataframe["Country"] == country]
-    dataframe = create_invoice_product_df(dataframe, id)
+    create_invoice_product_df(dataframe, id)
     frequent_itemsets = apriori(fr_inv_pro_df.astype("bool"),
                                 min_support = .01,
                                 use_colnames = True)
@@ -310,13 +312,12 @@ movies_to_be_recommend_names = movies_to_be_recommend.merge(movie[["movieId", "t
 
 
 # 7. Create Script
-def create_user_movie_df():
-    def create_user_movie_df(dataframe):
-        comment_counts = pd.DataFrame(dataframe["title"].value_counts())
-        rare_movies = comment_counts[comment_counts["title"] <= 10000].index
-        common_movies = dataframe[~dataframe["title"].isin(rare_movies)]
-        user_movie_df = common_movies.pivot_table(index = ["userId"], columns = ["title"], values = "rating")
-        return user_movie_df
+def create_user_movie_df(dataframe):
+    comment_counts = pd.DataFrame(dataframe["title"].value_counts())
+    rare_movies = comment_counts[comment_counts["title"] <= 10000].index
+    common_movies = dataframe[~dataframe["title"].isin(rare_movies)]
+    user_movie_df = common_movies.pivot_table(index = ["userId"], columns = ["title"], values = "rating")
+    return user_movie_df
 
 
 def user_based_recommender(random_user, user_movie_df, ratio=.6, cor_th=.4, score=2):
@@ -337,7 +338,7 @@ def user_based_recommender(random_user, user_movie_df, ratio=.6, cor_th=.4, scor
     corr_df.index.names = ["user_id_1", "user_id_2"]
     corr_df = corr_df.reset_index()
 
-    top_users = corr_df[(corr_df["user_id_1"] == random_user) & (corr_df["corr"] >= .4)][
+    top_users = corr_df[(corr_df["user_id_1"] == random_user) & (corr_df["corr"] >= cor_th)][
         ["user_id_2", "corr"]].reset_index(drop = True)
     top_users = top_users.sort_values("corr", ascending = False)
     top_users = top_users.rename(columns = {"user_id_2": "userId", "corr": "correlation"})
@@ -347,7 +348,7 @@ def user_based_recommender(random_user, user_movie_df, ratio=.6, cor_th=.4, scor
 
     recommendation_df = top_users_ratings.groupby("movieId").agg({"weighted_rating": "mean"}).reset_index()
 
-    movies_to_be_recommend = recommendation_df[recommendation_df["weighted_rating"] > 2]. \
+    movies_to_be_recommend = recommendation_df[recommendation_df["weighted_rating"] > score]. \
         sort_values("weighted_rating", ascending = False)
     movies_to_be_recommend_names = movies_to_be_recommend.merge(movie[["movieId", "title"]])
     return movies_to_be_recommend_names
@@ -357,3 +358,55 @@ random_user = int(pd.Series(user_movie_df.index).sample(1).values)
 user_based_recommender(random_user, user_movie_df)
 
 # Model Based Matrix Factorization #
+import pandas as pd
+from surprise import Reader, SVD, Dataset, accuracy
+from surprise.model_selection import GridSearchCV, train_test_split, cross_validate
+
+# 1. Prepare DataFrames
+movie = pd.read_csv("datasets/kaggle/movie.csv")
+rating = pd.read_csv("datasets/kaggle/rating.csv")
+df = movie.merge(rating, how = "left", on = "movieId")
+
+movie_ids = [130219, 356, 4422, 541]
+movies = ["The Dark Knight (2011)",
+          "Cries and Whispers (Viskningar och rop) (1972)",
+          "Forrest Gump (1994)",
+          "Blade Runner (1982)"]
+
+sample_df = df[df.movieId.isin(movie_ids)]
+
+user_movie_df = sample_df.pivot_table(index = ["userId"],
+                                      columns = ["title"],
+                                      values = ["rating"])
+reader = Reader(rating_scale = (1, 5))
+
+data = Dataset.load_from_df(sample_df[["userId", "movieId", "rating"]], reader)
+
+# 2. Modelling
+trainset, testset = train_test_split(data, test_size = .25)
+svd_model = SVD()
+svd_model.fit(trainset)
+predictions = svd_model.test(testset)
+
+accuracy.rmse(predictions)
+
+svd_model.predict(uid = 1.0, iid = 541, verbose = True)
+
+# 3. Model Tuning
+param_grid = {"n_epochs": [5, 10, 20],
+              "lr_all": [.002, .005, .007]}
+
+gs = GridSearchCV(SVD, param_grid, measures = ["rmse", "mae"],
+
+                  cv = 3, n_jobs = -1, joblib_verbose = True)
+gs.fit(data)
+
+gs.best_score["rmse"]
+gs.best_params["rmse"]
+
+# 4. Final Model and Prediction
+svd_model = SVD(**gs.best_params["rmse"])
+data = data.build_full_trainset()
+svd_model.fit(data)
+
+svd_model.predict(uid = 1.0, iid = 541, verbose = True)
