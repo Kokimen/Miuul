@@ -39,7 +39,7 @@ data_summary(df)
 # 3. Create User Movie DataFrame
 def create_user_movie_df(dataframe):
     comment_counts = pd.DataFrame(dataframe["title"].value_counts())
-    rare_movies = comment_counts[comment_counts["title"] <= 1000].index
+    rare_movies = comment_counts[comment_counts["title"] <= 10000].index
     common_movies = dataframe[~dataframe["title"].isin(rare_movies)]
     user_movie_df = common_movies.pivot_table(index = ["userId"], columns = ["title"], values = "rating")
     return user_movie_df
