@@ -113,3 +113,67 @@ def grab_col_names(dataframe, categoric_threshold=10, cardinal_threshold=20):
 
 
 categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+
+numeric_cols = [col for col in numeric_cols if col not in "PassengerId"]
+
+for col in numeric_cols:
+    print(col, check_outlier(df, col))
+
+
+# Reach the Outliers
+def grab_outliers(dataframe, col_name, index=False):
+    low, up = outlier_thresholds(dataframe, col_name)
+
+    if dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].shape[0] > 10:
+        print(dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].head())
+    else:
+        print(dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))])
+
+    if index:
+        outlier_index = dataframe[((dataframe[col_name] < low) | (dataframe[col_name] > up))].index
+        return outlier_index
+
+
+grab_outliers(df, "Age", True)
+
+# Solve the Outliers Problem
+low, up = outlier_thresholds(df, "Fare")
+df[~((df.Fare < low) | (df.Fare > up))].shape
+
+
+def remove_outliers(dataframe, col_name):
+    low_limit, up_limit = outlier_thresholds(dataframe, col_name)
+    df_without_outliers = dataframe[~((dataframe[col_name] < low_limit) | (dataframe[col_name] > up_limit))]
+    return df_without_outliers
+
+
+for col in numeric_cols:
+    new_df = remove_outliers(df, col)
+
+# Re-Assignment with Thresholds
+low, up = outlier_thresholds(df, "Fare")
+
+df[(df.Fare < low) | (df.Fare > up)]["Fare"]
+
+# This is make re-assignment
+df.loc[(df.Fare > up), "Fare"] = up
+
+df.loc[(df.Fare < low), "Fare"] = low
+
+
+def replace_with_threshold(dataframe, variable):
+    low_limit, up_limit = outlier_thresholds(dataframe, variable)
+    dataframe.loc[(dataframe[variable] < low_limit), variable] = low_limit
+    dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit
+
+
+for col in numeric_cols:
+    print(col, replace_with_threshold(df, col))
+
+# Summary
+df = load_titanic()
+outlier_thresholds(df, "Age")
+check_outlier(df, "Age")
+grab_outliers(df, "Age", index = True)
+remove_outliers(df, "Age")
+replace_with_threshold(df, "Age")
