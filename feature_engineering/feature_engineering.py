@@ -274,3 +274,29 @@ dff = pd.DataFrame(scaler.inverse_transform(dff), columns = dff.columns)
 
 df["age_imputed_knn"] = dff[["Age"]]
 df.loc[df.Age.isnull(), ["Age", "age_imputed_knn"]]
+
+# Advance Analysis of Missing Values
+msno.bar(df)
+plt.show()
+
+msno.matrix(df)
+plt.show()
+
+msno.heatmap(df)
+plt.show()
+
+# The Relationship of Missing Values with the Dependent Variable (Bonus)
+na_columns = missing_values_table(df, True)
+
+
+def missing_vs_target(dataframe, target, na_columns):
+    temp_df = dataframe.copy()
+    for col in na_columns:
+        temp_df[col + "_NA_FLAG"] = np.where(temp_df[col].isnull(), 1, 0)
+    na_flags = temp_df.loc[:, temp_df.columns.str.contains("_NA_")].columns
+    for col in na_flags:
+        print(pd.DataFrame({"TARGET_MEAN": temp_df.groupby(col)[target].mean(),
+                            "Count": temp_df.groupby(col)[target].count()}), end = "\n\n\n")
+
+
+missing_vs_target(df, "Survived", na_columns)
