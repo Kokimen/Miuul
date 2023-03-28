@@ -329,3 +329,21 @@ binary_cols = [col for col in df.columns if df[col].dtype not in [int, float]
 
 for col in binary_cols:
     label_encoder(df, col)
+
+# One Hot Encoding
+df.Embarked.value_counts()
+# this is for see the nan values
+# pd.get_dummies(df, columns=["Embarked"], dummy_na = True).head()
+pd.get_dummies(df, columns = ["Sex", "Embarked"], drop_first = True).head()
+
+
+def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
+    dataframe = pd.get_dummies(dataframe, columns = categorical_cols, drop_first = drop_first)
+    return dataframe
+
+
+categoric_cols_cols, numeric_cols_cols, categoric_but_cardinal_but_car = grab_col_names(df)
+
+ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
+
+one_hot_encoder(df, ohe_cols).head()
