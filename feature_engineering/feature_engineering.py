@@ -342,8 +342,58 @@ def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
     return dataframe
 
 
-categoric_cols_cols, numeric_cols_cols, categoric_but_cardinal_but_car = grab_col_names(df)
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
 ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
 
 one_hot_encoder(df, ohe_cols).head()
+
+# Rare Encoding
+# Analysis of scarcity and abundance of variables
+df = load_application_train()
+
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+
+
+def cat_summary(dataframe, col_name, plot=False):
+    print(pd.DataFrame({col_name: dataframe[col_name].value_counts(),
+                        "Ratio": 100 * dataframe[col_name].value_counts() / len(dataframe)}))
+
+    if plot:
+        sns.countplot(x = dataframe[col_name], data = dataframe)
+        plt.show()
+
+
+for col in categoric_cols:
+    cat_summary(df, col)
+
+# Analysis of the relationship between rare categories and dependent variable
+df.groupby("NAME_INCOME_TYPE")["TARGET"].mean()
+
+
+def rare_analyser(dataframe, target, categoric_cols):
+    for col in categoric_cols:
+        print(col, ":", len(dataframe[col].value_counts()))
+        print(pd.DataFrame({"COUNT": dataframe[col].value_counts(),
+                            "RATIO": dataframe[col].value_counts() / len(dataframe),
+                            "TARGET_MEAN": dataframe.groupby(col)[target].mean()}), end = "\n\n\n")
+
+
+rare_analyser(df, "TARGET", categoric_cols)
+
+
+# Rare Enconder Function
+def rare_encoder(dataframe, rare_percentage):
+    temp_df = dataframe.copy()
+    rare_columns = [col for col in temp_df.columns if temp_df[col].dtypes == "O"
+                    and (temp_df[col].value_counts() / len(temp_df) < rare_percentage).any(axis = None)]
+
+    for var in rare_columns:
+        tmp = temp_df[var].value_counts() / len(temp_df)
+        rare_labels = tmp[tmp < rare_percentage].index
+        temp_df[var] = np.where(temp_df[var].isin(rare_labels), "Rare", temp_df[var])
+
+    return temp_df
+
+
+rare_encoder(df, .01)
