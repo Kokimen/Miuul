@@ -300,3 +300,32 @@ def missing_vs_target(dataframe, target, na_columns):
 
 
 missing_vs_target(df, "Survived", na_columns)
+
+# Label Encoding & Binary Encoding
+df = load_titanic()
+df.Sex.head()
+
+le = LabelEncoder()
+le.fit_transform(df.Sex)[0:5]
+le.inverse_transform([0, 1])  # --> değerlerin karşılığını içinde tutar.
+
+
+def label_encoder(dataframe, binary_col):
+    labelencoder = LabelEncoder()
+    dataframe[binary_col] = labelencoder.fit_transform(dataframe[binary_col])
+    return dataframe
+
+
+binary_cols = [col for col in df.columns if df[col].dtype not in [int, float]
+               and df[col].nunique() == 2]
+
+for col in binary_cols:
+    label_encoder(df, col)
+
+df = load_application_train()
+
+binary_cols = [col for col in df.columns if df[col].dtype not in [int, float]
+               and df[col].nunique() == 2]
+
+for col in binary_cols:
+    label_encoder(df, col)
