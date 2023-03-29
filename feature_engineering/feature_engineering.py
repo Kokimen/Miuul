@@ -397,3 +397,189 @@ def rare_encoder(dataframe, rare_percentage):
 
 
 rare_encoder(df, .01)
+
+# Feature Scaling
+# StandardScaler: Klasik standartlaştırma. Ortalamayı çıkar, standart sapmaya böl. z = (x - u) / s
+ss = StandardScaler()
+df["Age_standard_scaler"] = ss.fit_transform(df[["Age"]])
+
+# RobustScaler: Medyanı çıkar, iqr'a böl. (Outliersa karşı dayanıklı)
+rs = RobustScaler()
+df["Age_robuts_scaler"] = rs.fit_transform(df[["Age"]])
+
+# Minimum Maximum Scaler
+mms = MinMaxScaler()
+
+df["Age_min_max_scaler"] = mms.fit_transform(df[["Age"]])
+df.describe().T
+
+age_cols = [col for col in df.columns if "Age" in col]
+
+
+def num_summary(dataframe, numerical_col, plot=False):
+    quantiles = [.05, .1]
+    print(dataframe[numerical_col].describe(quantiles).T)
+
+    if plot:
+        dataframe[numerical_col].hist(bins = 20)
+        plt.xlabel(numerical_col)
+        plt.title(numerical_col)
+        plt.show()
+
+
+for col in age_cols:
+    num_summary(df, col, plot = True)
+
+# Numeric to Categorical
+# Binning
+df["Age_qcut"] = pd.qcut(df.Age, 5)
+
+# Feature Extraction
+# Binary features: flag, bool, true-false
+df["NEW_CABIN_BOOL"] = df.Cabin.notnull().astype("int")
+df.groupby("NEW_CABIN_BOOL").agg({"Survived": "mean"})
+
+# Relationship check between two variables, Proportion Test
+from statsmodels.stats.proportion import proportions_ztest
+
+test_stat, pvalue = proportions_ztest(count = [df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].sum(),
+                                               df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].sum()],
+                                      nobs = [df.loc[df["NEW_CABIN_BOOL"] == 1, "Survived"].shape[0],
+                                              df.loc[df["NEW_CABIN_BOOL"] == 0, "Survived"].shape[0]])
+
+print("Test Stat = %.4f, p-value = %.4f" % (test_stat, pvalue))
+
+df.loc[((df.SibSp + df.Parch) > 0), "NEW_IS_ALONE"] = "NO"
+df.loc[((df.SibSp + df.Parch) == 0), "NEW_IS_ALONE"] = "YES"
+df.groupby("NEW_IS_ALONE").agg({"Survived": "mean"})
+
+test_stat, pvalue = proportions_ztest(count = [df.loc[df["NEW_IS_ALONE"] == "YES", "Survived"].sum(),
+                                               df.loc[df["NEW_IS_ALONE"] == "NO", "Survived"].sum()],
+                                      nobs = [df.loc[df["NEW_IS_ALONE"] == "YES", "Survived"].shape[0],
+                                              df.loc[df["NEW_IS_ALONE"] == "NO", "Survived"].shape[0]])
+
+print("Test Stat = %.4f, p-value = %.4f" % (test_stat, pvalue))
+
+# Text Features
+# Letter Count
+df["NEW_NAME_COUNT"] = df.Name.str.len()
+
+# Word Count
+df["NEW_NAME_WORD_COUNT"] = df.Name.apply(lambda x: len(str(x).split(" ")))
+
+# Catch the Special Structures
+df["NEW_NAME_DR"] = df.Name.apply(lambda x: len([x for x in x.split() if x.startswith("Dr")]))
+df.groupby("NEW_NAME_DR").agg({"Survived": ["mean", "count"]})
+
+# Regex Features
+df["NEW_TITLE"] = df.Name.str.extract(" ([A-Za-z]+).", expand = False)
+df[["NEW_TITLE", "Survived", "Age"]].groupby(["NEW_TITLE"]).agg({"Survived": "mean", "Age": ["count", "mean"]})
+
+# Date Features
+df = pd.read_csv("datasets/miuul/course_reviews.csv")
+df["Timestamp"] = pd.to_datetime(df.Timestamp, format = "%Y-%m-%d")
+df["year"] = df.Timestamp.dt.year
+df["month"] = df.Timestamp.dt.month
+df["year_diff"] = date.today().year - df.Timestamp.dt.year  # --> try as df.year
+df["month_diff"] = (date.today().year - df.Timestamp.dt.year) * 12 + date.today().month - df.Timestamp.dt.month
+df["day_name"] = df.Timestamp.dt.day_name()
+
+# Feature Interactions
+df["NEW_AGE_PCLASS"] = df.Age * df.Pclass
+df["NEW_FAMILY_SIZE"] = df.SibSp + df.Parch + 1
+df.loc[(df.Sex == "male") & (df.Age <= 21), "NEW_SEX_CAT"] = "youngmale"
+df.loc[(df.Sex == "female") & (df.Age <= 21), "NEW_SEX_CAT"] = "youngfemale"
+df.groupby("NEW_SEX_CAT")["Survived"].mean()
+
+# Feature Engineering & Data Preprocessing for Titanic
+df.columns = [col.upper() for col in df.columns]
+# 1. Feature Engineering
+# cabin bool
+df["NEW_CABIN_BOOL"] = df.CABIN.notnull().astype("int")
+# name count
+df["NEW_NAME_COUNT"] = df.NAME.str.len()
+# name word count
+df["NEW_NAME_WORD_COUNT"] = df.NAME.apply(lambda x: len(str(x).split(" ")))
+# name dr
+df["NEW_NAME_DR"] = df.NAME.apply(lambda x: len([x for x in x.split() if x.startswith("Dr")]))
+# name title
+df["NEW_TITLE"] = df.NAME.str.extract(" ([A-Za-z]+).", expand = False)
+# family size
+df["NEW_FAMILY_SIZE"] = df.SIBSP + df.PARCH + 1
+# age pclass
+df["NEW_AGE_PCLASS"] = df.AGE * df.PCLASS
+# is alone
+df.loc[((df.SIBSP + df.PARCH) > 0), "NEW_IS_ALONE"] = "NO"
+df.loc[((df.SIBSP + df.PARCH) == 0), "NEW_IS_ALONE"] = "YES"
+# age level
+df.loc[(df.AGE < 18), "NEW_AGE_CAT"] = "young"
+df.loc[(df.AGE >= 18) & (df.AGE < 56), "NEW_AGE_CAT"] = "mature"
+df.loc[(df.AGE >= 56), "NEW_AGE_CAT"] = "senior"
+
+# age * sex
+df.loc[(df.SEX == "male") & (df.AGE <= 21), "NEW_SEX_CAT"] = "youngmale"
+df.loc[(df.SEX == "male") & (df.AGE > 21) & (df.AGE <= 50), "NEW_SEX_CAT"] = "maturemale"
+df.loc[(df.SEX == "male") & (df.AGE > 50), "NEW_SEX_CAT"] = "seniormale"
+df.loc[(df.SEX == "female") & (df.AGE <= 21), "NEW_SEX_CAT"] = "youngfemale"
+df.loc[(df.SEX == "female") & (df.AGE > 21) & (df.AGE <= 50), "NEW_SEX_CAT"] = "maturefemale"
+df.loc[(df.SEX == "female") & (df.AGE > 50), "NEW_SEX_CAT"] = "seniorfemale"
+
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+numeric_cols = [col for col in numeric_cols if "PASSENGERID" not in col]
+
+# 2. Check the Outliers
+for col in numeric_cols:
+    print(col, check_outlier(df, col))
+
+for col in numeric_cols:
+    replace_with_threshold(df, col)
+
+# 3. Check the Missing Values
+missing_values_table(df)
+df = df.drop("CABIN", axis = 1)
+df = df.drop(["TICKET", "NAME"], axis = 1)
+
+df["AGE"] = df["AGE"].fillna(df.groupby("NEW_TITLE")["AGE"].transform("median"))
+
+df = df.apply(lambda x: x.fillna(x.mode()[0]) if (x.dtype == "O" and len(x.unique()) <= 10) else x, axis = 0)
+
+# 4. Label Encoding
+binary_cols = [col for col in df.columns if df[col].dtype not in [int, float]
+               and df[col].nunique() == 2]
+
+for col in binary_cols:
+    df = label_encoder(df, col)
+
+# 4.1. Rare Encoding
+rare_analyser(df, "SURVIVED", categoric_cols)
+df = rare_encoder(df, .01)
+
+# 4.2. One-Hot Encoding
+ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
+
+df = one_hot_encoder(df, ohe_cols)
+
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+numeric_cols = [col for col in numeric_cols if "PASSENGERID" not in col]
+
+rare_analyser(df, "SURVIVED", categoric_cols)
+
+useless_cols = [col for col in df.columns if df[col].nunique() == 2 and
+                (df[col].value_counts() / len(df) < .01).any(axis = None)]
+
+df = df.drop(useless_cols, axis = 1)
+
+# 5. Standard Scaler (we don't need, just for information)
+scaler = StandardScaler()
+df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+
+# 6. Creating Model
+y = df.SURVIVED  # --> dependent variable
+x = df.drop(["PASSENGERID", "SURVIVED"], axis = 1)  # --> other variables are independent variables
+
+from sklearn.ensemble import RandomForestClassifier
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .3, random_state = 17)
+rf_model = RandomForestClassifier(random_state = 46).fit(x_train, y_train)
+y_pred = rf_model.predict(x_test)
+accuracy_score(y_pred, y_test)
