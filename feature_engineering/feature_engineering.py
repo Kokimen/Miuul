@@ -74,8 +74,8 @@ def outlier_thresholds(dataframe, variable):
 
 def replace_with_threshold(dataframe, variable):
     low_limit, up_limit = outlier_thresholds(dataframe, variable)
-    dataframe[(dataframe[variable] < low_limit), variable] = low_limit
-    dataframe[(dataframe[variable] > up_limit), variable] = up_limit
+    dataframe.loc[(dataframe[variable] < low_limit), variable] = low_limit
+    dataframe.loc[(dataframe[variable] > up_limit), variable] = up_limit
 
 
 def check_outlier(dataframe, col_name):
@@ -492,6 +492,7 @@ df.loc[(df.Sex == "female") & (df.Age <= 21), "NEW_SEX_CAT"] = "youngfemale"
 df.groupby("NEW_SEX_CAT")["Survived"].mean()
 
 # Feature Engineering & Data Preprocessing for Titanic
+df = load_titanic()
 df.columns = [col.upper() for col in df.columns]
 # 1. Feature Engineering
 # cabin bool
@@ -503,7 +504,7 @@ df["NEW_NAME_WORD_COUNT"] = df.NAME.apply(lambda x: len(str(x).split(" ")))
 # name dr
 df["NEW_NAME_DR"] = df.NAME.apply(lambda x: len([x for x in x.split() if x.startswith("Dr")]))
 # name title
-df["NEW_TITLE"] = df.NAME.str.extract(" ([A-Za-z]+).", expand = False)
+df["NEW_TITLE"] = df.NAME.str.extract(" ([A-Za-z]+)\.", expand = False)
 # family size
 df["NEW_FAMILY_SIZE"] = df.SIBSP + df.PARCH + 1
 # age pclass
