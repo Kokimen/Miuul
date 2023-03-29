@@ -77,8 +77,27 @@ def grab_col_names(dataframe, categoric_threshold=10, cardinal_threshold=20):
 
 categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
-# Adım 4: Hedef değişken analizi yapınız. (Kategorik değişkenlere göre hedef değişkenin ortalaması, hedef değişkene göre
-# numerik değişkenlerin ortalaması)
+# 3. Make the Target Variable Analysis
+df.loc[(df.Churn == "No"), "CHURN_BOOL"] = 0
+df.loc[(df.Churn == "Yes"), "CHURN_BOOL"] = 1
+
+df.groupby("gender")["CHURN_BOOL"].mean()
+
+
+def rare_analyser(dataframe, target, categoric_cols):
+    for col in categoric_cols:
+        print(col, ":", len(dataframe[col].value_counts()))
+        print(pd.DataFrame({"COUNT": dataframe[col].value_counts(),
+                            "RATIO": dataframe[col].value_counts() / len(dataframe),
+                            "TARGET_MEAN": dataframe.groupby(col)[target].mean()}), end = "\n\n\n")
+
+
+rare_analyser(df, "Churn", categoric_cols)
+
 # Adım 5: Aykırı gözlem analizi yapınız.
 # Adım 6: Eksik gözlem analizi yapınız.
 # Adım 7: Korelasyon analizi yapınız.
+
+df.head(30)
+df.gender.dtype
+df.CHURN_BOOL.dtype
