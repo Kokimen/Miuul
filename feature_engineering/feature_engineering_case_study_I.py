@@ -81,7 +81,7 @@ categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 df.loc[(df.Churn == "No"), "CHURN_BOOL"] = 0
 df.loc[(df.Churn == "Yes"), "CHURN_BOOL"] = 1
 
-df.groupby("gender")["CHURN_BOOL"].mean()
+df.groupby("gender")["CHURN_BOOL"].mean()  ####HEREEE####
 
 
 def rare_analyser(dataframe, target, categoric_cols):
@@ -93,11 +93,3 @@ def rare_analyser(dataframe, target, categoric_cols):
 
 
 rare_analyser(df, "Churn", categoric_cols)
-
-# Adım 5: Aykırı gözlem analizi yapınız.
-# Adım 6: Eksik gözlem analizi yapınız.
-# Adım 7: Korelasyon analizi yapınız.
-
-df.head(30)
-df.gender.dtype
-df.CHURN_BOOL.dtype
