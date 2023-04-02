@@ -324,9 +324,6 @@ for col in binary_cols:
 
 df = load_application_train()
 
-binary_cols = [col for col in df.columns if df[col].dtype not in [int, float]
-               and df[col].nunique() == 2]
-
 for col in binary_cols:
     label_encoder(df, col)
 
@@ -584,27 +581,3 @@ x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .3, random
 rf_model = RandomForestClassifier(random_state = 46).fit(x_train, y_train)
 y_pred = rf_model.predict(x_test)
 accuracy_score(y_pred, y_test)
-
-#                            count    mean     std    min     5%    25%     50%     75%     90%     99%     max
-# Pregnancies              768.000   3.845   3.370  0.000  0.000  1.000   3.000   6.000   9.000  13.000  17.000
-# Glucose                  768.000 120.895  31.973  0.000 79.000 99.000 117.000 140.250 167.000 196.000 199.000
-# BloodPressure            768.000  69.105  19.356  0.000 38.700 62.000  72.000  80.000  88.000 106.000 122.000
-# SkinThickness            768.000  20.536  15.952  0.000  0.000  0.000  23.000  32.000  40.000  51.330  99.000
-# Insulin                  768.000  79.799 115.244  0.000  0.000  0.000  30.500 127.250 210.000 519.900 846.000
-# BMI                      768.000  31.993   7.884  0.000 21.800 27.300  32.000  36.600  41.500  50.759  67.100
-# DiabetesPedigreeFunction 768.000   0.472   0.331  0.078  0.140  0.244   0.372   0.626   0.879   1.698   2.420
-# Age                      768.000  33.241  11.760 21.000 21.000 24.000  29.000  41.000  51.000  67.000  81.000
-# Outcome                  768.000   0.349   0.477  0.000  0.000  0.000   0.000   1.000   1.000   1.000   1.000
-
-# # # # [ D A T A F R A M E --> H E A D ] # # #
-#    Pregnancies  Glucose  BloodPressure  SkinThickness  Insulin    BMI  DiabetesPedigreeFunction  Age  Outcome
-# 0            6      148             72             35        0 33.600                     0.627   50        1
-# 1            1       85             66             29        0 26.600                     0.351   31        0
-# 2            8      183             64              0        0 23.300                     0.672   32        1
-# 3            1       89             66             23       94 28.100                     0.167   21        0
-# 4            0      137             40             35      168 43.100                     2.288   33        1
-# 5            5      116             74              0        0 25.600                     0.201   30        0
-# 6            3       78             50             32       88 31.000                     0.248   26        1
-# 7           10      115              0              0        0 35.300                     0.134   29        0
-# 8            2      197             70             45      543 30.500                     0.158   53        1
-# 9            8      125             96              0        0  0.000                     0.232   54        1

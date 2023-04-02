@@ -1,23 +1,3 @@
-# Özellikleri belirtildiğinde kişilerin diyabet hastası olup olmadıklarını tahmin
-# edebilecek bir makine öğrenmesi modeli geliştirilmesi istenmektedir. Modeli
-# geliştirmeden önce gerekli olan veri analizi ve özellik mühendisliği adımlarını
-# gerçekleştirmeniz beklenmektedir.
-
-# Veri seti ABD'deki Ulusal Diyabet-Sindirim-Böbrek Hastalıkları Enstitüleri'nde tutulan büyük veri setinin parçasıdır. ABD'deki
-# Arizona Eyaleti'nin en büyük 5. şehri olan Phoenix şehrinde yaşayan 21 yaş ve üzerinde olan Pima Indian kadınları üzerinde
-# yapılan diyabet araştırması için kullanılan verilerdir.
-# Hedef değişken "outcome" olarak belirtilmiş olup; 1 diyabet test sonucunun pozitif oluşunu, 0 ise negatif oluşunu belirtmektedir.
-
-# Pregnancies Hamilelik sayısı
-# Glucose Oral glikoz tolerans testinde 2 saatlik plazma glikoz konsantrasyonu
-# Blood Pressure Kan Basıncı (Küçük tansiyon) (mm Hg)
-# SkinThickness Cilt Kalınlığı
-# Insulin 2 saatlik serum insülini (mu U/ml)
-# DiabetesPedigreeFunction Fonksiyon (Oral glikoz tolerans testinde 2 saatlik plazma glikoz konsantrasyonu)
-# BMI Vücut kitle endeksi
-# Age Yaş (yıl)
-# Outcome Hastalığa sahip (1) ya da değil (0)
-
 import itertools
 import numpy as np
 import pandas as pd
@@ -106,19 +86,23 @@ def grab_col_names(dataframe, categoric_threshold=10, cardinal_threshold=20):
 
 categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
+
 # Glikoz, kan basıncı, deri kalınlığı, insülin ve vücut kitle indeksinde min olarak sıfır değerlerin yanında max olarak
-# %99'luk kısma nazaran oldukça yüksek değerler vardır.
+# %99'luk kısma nazaran oldukça yüksek değerler vardır. Bu yüzden thresholda göre kırpmak uygun
 
 # Adım 4: Hedef değişken analizi yapınız. (Kategorik değişkenlere göre hedef değişkenin ortalaması, hedef değişkene göre
 # numerik değişkenlerin ortalaması)
 
-df_corr = df.corr().abs().unstack().sort_values(kind = "quicksort", ascending = False).reset_index()
-df_corr.rename(columns = {"level_0": "Feature 1", "level_1": "Feature 2", 0: 'Correlation Coefficient'}, inplace = True)
-df_corr[df_corr['Feature 1'] == 'Outcome']
-df.groupby(numeric_cols).agg({"Outcome": "mean"}).sort_values(by = "Glucose", ascending = False)
+
+def target_summary_with_num(dataframe, target, numerical_col):
+    print(dataframe.groupby(target).agg({numerical_col: "mean"}), end = "\n\n\n")
 
 
-# Adım 5: Aykırı gözlem analizi yapınız.
+for col in numeric_cols:
+    target_summary_with_num(df, "Outcome", col)
+
+
+# Analysis of Outliers
 def check_outlier(dataframe, col_name):
     low_limit, up_limit = outlier_thresholds(dataframe, col_name)
     if dataframe[(dataframe[col_name] > up_limit) | (dataframe[col_name] < low_limit)].any(axis = None):
@@ -152,16 +136,16 @@ outliers_columns = ["Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI
 for col in outliers_columns:
     replace_with_threshold(df, col)
 
-# Check the Missing Values
+# Analysis of Missing Values
 zero_values = [col for col in df.columns if 0 in df[col].values]
+
+zero_columns = ['SkinThickness', 'Insulin']
 
 
 def replace_zero_with_nan(df, cols):
     for col in cols:
         df[col].replace(0, np.nan, inplace = True)
 
-
-zero_columns = ['SkinThickness', 'Insulin']
 
 replace_zero_with_nan(df, zero_columns)
 
@@ -178,4 +162,50 @@ def missing_values_table(dataframe, na_name=False):
 
 missing_values_table(df)
 
-# Adım 7: Korelasyon analizi yapınız.
+df["Insulin"] = df["Insulin"].fillna(df.groupby("Glucose")["Insulin"].transform("mean"))
+df["Insulin"] = df["Insulin"].fillna(df["Insulin"].mean())
+df["SkinThickness"] = df["SkinThickness"].fillna(df.groupby("BMI")["SkinThickness"].transform("mean"))
+df["SkinThickness"] = df["SkinThickness"].fillna(df["SkinThickness"].mean())
+
+# Analysis of Correlation
+df_corr = df.corr().abs().unstack().sort_values(kind = "quicksort", ascending = False).reset_index()
+df_corr.rename(columns = {"level_0": "Feature 1", "level_1": "Feature 2", 0: 'Correlation Coefficient'}, inplace = True)
+df_corr[df_corr['Feature 1'] == 'Outcome']
+
+# Creating New Variables
+df.loc[(df["Pregnancies"] > 0), "Is_Pregnant"] = 1
+df.loc[(df["Pregnancies"] == 0), "Is_Pregnant"] = 0
+
+# df.loc[(df["Age"] >= 21) & (df["Age"] <= 39), "New_Age_Cat"] = "YoungAdults"
+# df.loc[(df["Age"] >= 40) & (df["Age"] <= 59), "New_Age_Cat"] = "MiddleAgedAdults"
+# df.loc[(df["Age"] >= 60) & (df["Age"] <= 99), "New_Age_Cat"] = "OldAdults"
+
+df.head()
+
+
+# Encoding
+def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
+    dataframe = pd.get_dummies(dataframe, columns = categorical_cols, drop_first = drop_first)
+    return dataframe
+
+
+ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
+
+one_hot_encoder(df, ohe_cols)
+
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+
+# Standarzation of Numeric Columns
+scaler = StandardScaler()
+df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+
+# Create Model
+y = df["Outcome"]  # --> dependent variable
+X = df.drop(["Outcome"], axis = 1)  # --> other variables are independent variables
+
+from sklearn.ensemble import RandomForestClassifier
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random_state = 17)
+rf_model = RandomForestClassifier(random_state = 46).fit(X_train, y_train)
+y_pred = rf_model.predict(X_test)
+accuracy_score(y_pred, y_test)
