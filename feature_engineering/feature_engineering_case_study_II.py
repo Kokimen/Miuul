@@ -173,17 +173,55 @@ df_corr.rename(columns = {"level_0": "Feature 1", "level_1": "Feature 2", 0: 'Co
 df_corr[df_corr['Feature 1'] == 'Outcome']
 
 # Creating New Variables
-df.loc[(df["Pregnancies"] > 0), "Is_Pregnant"] = 1
-df.loc[(df["Pregnancies"] == 0), "Is_Pregnant"] = 0
+df.loc[(df["Pregnancies"] > 0), "Get_Pregnant"] = "Yes"
+df.loc[(df["Pregnancies"] == 0), "Get_Pregnant"] = "No"
 
-# df.loc[(df["Age"] >= 21) & (df["Age"] <= 39), "New_Age_Cat"] = "YoungAdults"
-# df.loc[(df["Age"] >= 40) & (df["Age"] <= 59), "New_Age_Cat"] = "MiddleAgedAdults"
-# df.loc[(df["Age"] >= 60) & (df["Age"] <= 99), "New_Age_Cat"] = "OldAdults"
-
-df.head()
+df.loc[(df["Age"] >= 21) & (df["Age"] <= 39), "New_Age_Cat"] = "YoungAdults"
+df.loc[(df["Age"] >= 40) & (df["Age"] <= 59), "New_Age_Cat"] = "MiddleAgedAdults"
+df.loc[(df["Age"] >= 60) & (df["Age"] <= 99), "New_Age_Cat"] = "OldAdults"
 
 
 # Encoding
+def label_encoder(dataframe, binary_col):
+    labelencoder = LabelEncoder()
+    dataframe[binary_col] = labelencoder.fit_transform(dataframe[binary_col])
+    return dataframe
+
+
+binary_cols = [col for col in df.columns if df[col].dtype not in [int, float]
+               and df[col].nunique() == 2]
+
+for col in binary_cols:
+    df = label_encoder(df, col)
+
+
+def rare_analyser(dataframe, target, categoric_cols):
+    for col in categoric_cols:
+        print(col, ":", len(dataframe[col].value_counts()))
+        print(pd.DataFrame({"COUNT": dataframe[col].value_counts(),
+                            "RATIO": dataframe[col].value_counts() / len(dataframe),
+                            "TARGET_MEAN": dataframe.groupby(col)[target].mean()}), end = "\n\n\n")
+
+
+rare_analyser(df, "Outcome", categoric_cols)
+
+
+def rare_encoder(dataframe, rare_percentage):
+    temp_df = dataframe.copy()
+    rare_columns = [col for col in temp_df.columns if temp_df[col].dtypes == "O"
+                    and (temp_df[col].value_counts() / len(temp_df) < rare_percentage).any(axis = None)]
+
+    for var in rare_columns:
+        tmp = temp_df[var].value_counts() / len(temp_df)
+        rare_labels = tmp[tmp < rare_percentage].index
+        temp_df[var] = np.where(temp_df[var].isin(rare_labels), "Rare", temp_df[var])
+
+    return temp_df
+
+
+rare_encoder(df, .01)
+
+
 def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
     dataframe = pd.get_dummies(dataframe, columns = categorical_cols, drop_first = drop_first)
     return dataframe
@@ -191,9 +229,12 @@ def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
 
 ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
 
-one_hot_encoder(df, ohe_cols)
+df = one_hot_encoder(df, ohe_cols)
 
 categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+
+useless_cols = [col for col in df.columns if df[col].nunique() == 2 and
+                (df[col].value_counts() / len(df) < .01).any(axis = None)]
 
 # Standarzation of Numeric Columns
 scaler = StandardScaler()
@@ -209,3 +250,17 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random
 rf_model = RandomForestClassifier(random_state = 46).fit(X_train, y_train)
 y_pred = rf_model.predict(X_test)
 accuracy_score(y_pred, y_test)
+
+
+def plot_importance(model, features, num=len(X)):
+    feature_imp = pd.DataFrame({'Value': model.feature_importances_, 'Feature': features.columns})
+    plt.figure(figsize = (10, 10))
+    sns.set(font_scale = 1)
+    sns.barplot(x = "Value", y = "Feature", data = feature_imp.sort_values(by = "Value",
+                                                                           ascending = False)[0:num])
+    plt.title('Features')
+    plt.tight_layout()
+    plt.show()
+
+
+plot_importance(rf_model, X_train)
