@@ -162,23 +162,36 @@ def missing_values_table(dataframe, na_name=False):
 
 missing_values_table(df)
 
-df["Insulin"] = df["Insulin"].fillna(df.groupby("Glucose")["Insulin"].transform("mean"))
+# df["Insulin"] = df["Insulin"].fillna(df.groupby("Glucose")["Insulin"].transform("mean"))
 df["Insulin"] = df["Insulin"].fillna(df["Insulin"].mean())
-df["SkinThickness"] = df["SkinThickness"].fillna(df.groupby("BMI")["SkinThickness"].transform("mean"))
+# df["SkinThickness"] = df["SkinThickness"].fillna(df.groupby("BMI")["SkinThickness"].transform("mean"))
 df["SkinThickness"] = df["SkinThickness"].fillna(df["SkinThickness"].mean())
 
 # Analysis of Correlation
 df_corr = df.corr().abs().unstack().sort_values(kind = "quicksort", ascending = False).reset_index()
-df_corr.rename(columns = {"level_0": "Feature 1", "level_1": "Feature 2", 0: 'Correlation Coefficient'}, inplace = True)
-df_corr[df_corr['Feature 1'] == 'Outcome']
+df_corr.rename(columns = {"level_0": "Dependent", "level_1": "Independent", 0: 'Correlation'}, inplace = True)
+df_corr[df_corr['Dependent'] == 'Outcome']
+
+df_corr.head(35)
 
 # Creating New Variables
-df.loc[(df["Pregnancies"] > 0), "Get_Pregnant"] = "Yes"
-df.loc[(df["Pregnancies"] == 0), "Get_Pregnant"] = "No"
+# df.loc[(df["Pregnancies"] > 0), "Get_Pregnant"] = "Yes"
+# df.loc[(df["Pregnancies"] == 0), "Get_Pregnant"] = "No"
 
-df.loc[(df["Age"] >= 21) & (df["Age"] <= 39), "New_Age_Cat"] = "YoungAdults"
-df.loc[(df["Age"] >= 40) & (df["Age"] <= 59), "New_Age_Cat"] = "MiddleAgedAdults"
-df.loc[(df["Age"] >= 60) & (df["Age"] <= 99), "New_Age_Cat"] = "OldAdults"
+# df.loc[(df["Age"] >= 21) & (df["Age"] <= 39), "New_Age"] = "Young-Adults"
+# df.loc[(df["Age"] >= 40) & (df["Age"] <= 59), "New_Age"] = "Middle-Adults"
+# df.loc[(df["Age"] >= 60) & (df["Age"] <= 99), "New_Age"] = "Old-Adults"
+
+df.loc[(df["BMI"] <= 18.5), "New_BMI"] = "Underweight"
+df.loc[(df["BMI"] >= 18.6) & (df["BMI"] <= 24.9), "New_BMI"] = "Normal"
+df.loc[(df["BMI"] >= 25.0) & (df["BMI"] <= 29.9), "New_BMI"] = "Overweight"
+df.loc[(df["BMI"] >= 30.0) & (df["BMI"] <= 34.9), "New_BMI"] = "Obesite_1"
+df.loc[(df["BMI"] >= 35.0) & (df["BMI"] <= 39.9), "New_BMI"] = "Obesite_2"
+df.loc[(df["BMI"] >= 40.0), "New_BMI"] = "Obesite_3"
+
+df.loc[(df["Glucose"] >= 80) & (df["Glucose"] <= 100), "New_Glucose"] = "Normal"
+df.loc[(df["Glucose"] >= 101) & (df["Glucose"] <= 125), "New_Glucose"] = "Impaired-Glucose"
+df.loc[(df["Glucose"] >= 126), "New_Glucose"] = "Diabetic"
 
 
 # Encoding
@@ -229,7 +242,7 @@ def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
 
 ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
 
-df = one_hot_encoder(df, ohe_cols)
+df = one_hot_encoder(df, ohe_cols, drop_first = True)
 
 categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
