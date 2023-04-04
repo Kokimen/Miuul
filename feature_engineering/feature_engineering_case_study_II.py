@@ -193,6 +193,10 @@ df.loc[(df["Glucose"] >= 80) & (df["Glucose"] <= 100), "New_Glucose"] = "Normal"
 df.loc[(df["Glucose"] >= 101) & (df["Glucose"] <= 125), "New_Glucose"] = "Impaired-Glucose"
 df.loc[(df["Glucose"] >= 126), "New_Glucose"] = "Diabetic"
 
+# df["BMI_Skin"] = df["BMI"] * df["SkinThickness"]
+
+# df["BMI_Age"] = df["BMI"] * df["Age"]
+
 
 # Encoding
 def label_encoder(dataframe, binary_col):
