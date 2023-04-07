@@ -1,19 +1,20 @@
+import itertools
 import numpy as np
 import pandas as pd
 import seaborn as sns
-
 from matplotlib import pyplot as plt
-
+import missingno as msno
 from sklearn.metrics import accuracy_score
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import LocalOutlierFactor
-from sklearn.preprocessing import MinMaxScaler, LabelEncoder, StandardScaler, RobustScaler
+from sklearn.preprocessing import LabelEncoder, StandardScaler, RobustScaler
+from sklearn.metrics import classification_report
 
 
 def pd_options():
-    pd.set_option("display.max_columns", 35)
-    pd.set_option("display.max_rows", 35)
-    pd.set_option('display.width', 500)
+    pd.set_option("display.max_columns", 80)
+    pd.set_option("display.max_rows", 80)
+    pd.set_option('display.width', 400)
     pd.set_option("display.expand_frame_repr", True)
     pd.options.mode.chained_assignment = None
     pd.set_option("display.float_format", lambda x: "%.3f" % x)
@@ -41,6 +42,7 @@ def data_summary(dataframe):
 data_summary(df)
 
 
+# Outlier Function
 def outlier_thresholds(dataframe, variable):
     quartile1 = dataframe[variable].quantile(.25)
     quartile3 = dataframe[variable].quantile(.75)
@@ -82,13 +84,6 @@ def grab_col_names(dataframe, categoric_threshold=10, cardinal_threshold=20):
 categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
 
-# Glikoz, kan basıncı, deri kalınlığı, insülin ve vücut kitle indeksinde min olarak sıfır değerlerin yanında max olarak
-# %99'luk kısma nazaran oldukça yüksek değerler vardır. Bu yüzden thresholda göre kırpmak uygun
-
-# Adım 4: Hedef değişken analizi yapınız. (Kategorik değişkenlere göre hedef değişkenin ortalaması, hedef değişkene göre
-# numerik değişkenlerin ortalaması)
-
-
 def target_summary_with_num(dataframe, target, numerical_col):
     print(dataframe.groupby(target).agg({numerical_col: "mean"}), end = "\n\n\n")
 
@@ -100,11 +95,21 @@ for col in numeric_cols:
 # Analysis of Outliers
 def check_outlier(dataframe, col_name):
     low_limit, up_limit = outlier_thresholds(dataframe, col_name)
-    if dataframe[(dataframe[col_name] > up_limit) | (dataframe[col_name] < low_limit)].any(axis = None):
-        return True
+    if dataframe[dataframe[col_name] > up_limit].any(axis = None):
+        return (f"--> Uplimit Outlier, {low_limit, up_limit}")
+    elif dataframe[dataframe[col_name] < low_limit].any(axis = None):
+        return (f" --> Lowlimit Outlier, {low_limit, up_limit}")
     else:
-        return False
+        return (f" --> No Outlier, {low_limit, up_limit}")
 
+
+for col in numeric_cols:
+    print(col, check_outlier(df, col))
+
+outliers_columns = ["Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI"]
+
+for col in outliers_columns:
+    replace_with_threshold(df, col)
 
 for col in numeric_cols:
     print(col, check_outlier(df, col))
@@ -134,7 +139,7 @@ for col in outliers_columns:
 # Analysis of Missing Values
 zero_values = [col for col in df.columns if 0 in df[col].values]
 
-zero_columns = ['SkinThickness', 'Insulin']
+cant_zero_columns = ["Glucose", "BloodPressure", "BMI", "Insulin", "SkinThickness"]
 
 
 def replace_zero_with_nan(df, cols):
@@ -142,7 +147,7 @@ def replace_zero_with_nan(df, cols):
         df[col].replace(0, np.nan, inplace = True)
 
 
-replace_zero_with_nan(df, zero_columns)
+replace_zero_with_nan(df, cant_zero_columns)
 
 
 def missing_values_table(dataframe, na_name=False):
@@ -157,41 +162,72 @@ def missing_values_table(dataframe, na_name=False):
 
 missing_values_table(df)
 
-# df["Insulin"] = df["Insulin"].fillna(df.groupby("Glucose")["Insulin"].transform("mean"))
-df["Insulin"] = df["Insulin"].fillna(df["Insulin"].mean())
-# df["SkinThickness"] = df["SkinThickness"].fillna(df.groupby("BMI")["SkinThickness"].transform("mean"))
-df["SkinThickness"] = df["SkinThickness"].fillna(df["SkinThickness"].mean())
+
+# Fill missing values
+def filling_with_mean(dataframe, column):
+    dataframe[column] = dataframe[column].fillna(dataframe[column].mean())
+
+
+for col in cant_zero_columns:
+    filling_with_mean(df, col)
+
+
+def target_summary_with_num(dataframe, target, numerical_col):
+    print(dataframe.groupby(target).agg({numerical_col: "mean"}), end = "\n\n\n")
+
+
+for col in numeric_cols:
+    target_summary_with_num(df, "Outcome", col)
 
 # Analysis of Correlation
 df_corr = df.corr().abs().unstack().sort_values(kind = "quicksort", ascending = False).reset_index()
 df_corr.rename(columns = {"level_0": "Dependent", "level_1": "Independent", 0: 'Correlation'}, inplace = True)
 df_corr[df_corr['Dependent'] == 'Outcome']
 
-df_corr.head(35)
-
-# Creating New Variables
-# df.loc[(df["Pregnancies"] > 0), "Get_Pregnant"] = "Yes"
-# df.loc[(df["Pregnancies"] == 0), "Get_Pregnant"] = "No"
-
-# df.loc[(df["Age"] >= 21) & (df["Age"] <= 39), "New_Age"] = "Young-Adults"
-# df.loc[(df["Age"] >= 40) & (df["Age"] <= 59), "New_Age"] = "Middle-Adults"
-# df.loc[(df["Age"] >= 60) & (df["Age"] <= 99), "New_Age"] = "Old-Adults"
-
-df.loc[(df["BMI"] <= 18.5), "New_BMI"] = "Underweight"
-df.loc[(df["BMI"] >= 18.6) & (df["BMI"] <= 24.9), "New_BMI"] = "Normal"
-df.loc[(df["BMI"] >= 25.0) & (df["BMI"] <= 29.9), "New_BMI"] = "Overweight"
-df.loc[(df["BMI"] >= 30.0) & (df["BMI"] <= 34.9), "New_BMI"] = "Obesite_1"
-df.loc[(df["BMI"] >= 35.0) & (df["BMI"] <= 39.9), "New_BMI"] = "Obesite_2"
-df.loc[(df["BMI"] >= 40.0), "New_BMI"] = "Obesite_3"
-
-df.loc[(df["Glucose"] >= 80) & (df["Glucose"] <= 100), "New_Glucose"] = "Normal"
-df.loc[(df["Glucose"] >= 101) & (df["Glucose"] <= 125), "New_Glucose"] = "Impaired-Glucose"
-df.loc[(df["Glucose"] >= 126), "New_Glucose"] = "Diabetic"
+corr_feature_helper = df_corr.sort_values(by = "Correlation", ascending = False)[9::].drop_duplicates(["Correlation"])
 
 
-# df["BMI_Skin"] = df["BMI"] * df["SkinThickness"]
+# Feature Engineering
+def categorize_age(df):
+    df["New_Age"] = df["Age"].apply(lambda x: "Young-Adults" if 21 <= x <= 39
+    else "Middle-Adults" if 40 <= x <= 59
+    else "Old-Adults")
+    return df
 
-# df["BMI_Age"] = df["BMI"] * df["Age"]
+
+categorize_age(df)
+
+
+def categorize_bmi(df):
+    df["New_BMI"] = df["BMI"].apply(lambda x: "Underweight" if x <= 18.5
+    else "Normal" if x <= 24.9
+    else "Overweight" if x <= 29.9
+    else "Obesite_1" if x <= 34.9
+    else "Obesite_2" if x <= 39.9
+    else "Obesite_3")
+    return df
+
+
+categorize_bmi(df)
+
+
+def categorize_bmi(df):
+    bins = [0, 18.5, 24.9, 29.9, 34.9, 39.9, float('inf')]
+    labels = ["Underweight", "Normal", "Overweight", "Obesite_1", "Obesite_2", "Obesite_3"]
+    df["New_BMI"] = pd.cut(df["BMI"], bins = bins, labels = labels)
+    return df
+
+
+def categorize_glucose(df):
+    df["New_Glucose"] = df["Glucose"].apply(lambda x: "Normal" if x >= 80 and x <= 100
+    else "Impaired" if x >= 101 and x <= 125
+    else "Diabetic")
+    return df
+
+
+categorize_glucose(df)
+
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
 
 # Encoding
@@ -208,6 +244,7 @@ for col in binary_cols:
     df = label_encoder(df, col)
 
 
+# Rare Enconding
 def rare_analyser(dataframe, target, categoric_cols):
     for col in categoric_cols:
         print(col, ":", len(dataframe[col].value_counts()))
@@ -216,6 +253,7 @@ def rare_analyser(dataframe, target, categoric_cols):
                             "TARGET_MEAN": dataframe.groupby(col)[target].mean()}), end = "\n\n\n")
 
 
+# One Hot Encoding
 rare_analyser(df, "Outcome", categoric_cols)
 
 
@@ -249,7 +287,7 @@ categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 useless_cols = [col for col in df.columns if df[col].nunique() == 2 and
                 (df[col].value_counts() / len(df) < .01).any(axis = None)]
 
-# Standarzation of Numeric Columns
+# Standarzation
 scaler = StandardScaler()
 df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
 
@@ -262,7 +300,7 @@ from sklearn.ensemble import RandomForestClassifier
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .3, random_state = 17)
 rf_model = RandomForestClassifier(random_state = 46).fit(X_train, y_train)
 y_pred = rf_model.predict(X_test)
-accuracy_score(y_pred, y_test)
+print(classification_report(y_pred, y_test))
 
 
 def plot_importance(model, features, num=len(X)):
