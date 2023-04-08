@@ -40,10 +40,10 @@ plt.show()
 reg_model = LinearRegression().fit(X, y)
 
 # sabit (b - bias)
-reg_model.intercept_
+reg_model.intercept_[0]
 
 # TV'nin katsayısı (w1)
-reg_model.coef_[0]
+reg_model.coef_[0][0]
 
 # Prediction
 reg_model.intercept_ + reg_model.coef_[0]
@@ -52,7 +52,6 @@ reg_model.intercept_ + reg_model.coef_[0]
 # MSE
 y_pred = reg_model.predict(X)
 mean_squared_error(y, y_pred)
-y.mean(), y.std()
 
 # RMSE
 np.sqrt(mean_squared_error(y, y_pred))
@@ -64,11 +63,11 @@ mean_absolute_error(y, y_pred)
 reg_model.score(X, y)
 
 # Visualization
-g = sns.regplot(x = X, y = y, scatter_kws = {"color": "b", "s": 15}, ci = False, color = "r")
+g = sns.regplot(x = X, y = y, scatter_kws = {"color": "r", "s": 15}, ci = False, color = "black")
 
-g.set_title(f"Moden Denklemi: Salary = {round(reg_model.intercept_[0], 2)}+Experience*{round(reg_model.coef_[0][0], 2)}")
-g.set_ylabel("Maaş")
-g.set_xlabel("Deneyim")
-plt.xlim(1, 12)
+g.set_title(f"Salary = {round(reg_model.intercept_[0], 2)} + Experience * {round(reg_model.coef_[0][0], 2)}")
+g.set_ylabel("Salary")
+g.set_xlabel("Experience")
+plt.xlim(0, 12)
 plt.ylim(bottom = 0)
 plt.show()
