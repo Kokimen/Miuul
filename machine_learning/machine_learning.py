@@ -178,13 +178,12 @@ cost_history, b, w = train(Y, initial_b, initial_w, X, learning_rate, num_iters)
 
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import seaborn as sns
 
 from sklearn.preprocessing import RobustScaler
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, classification_report, plot_roc_curve
+from sklearn.metrics import accuracy_score, roc_auc_score, confusion_matrix, classification_report
 from sklearn.model_selection import train_test_split, cross_validate
 
 
@@ -384,7 +383,7 @@ print(classification_report(y_test, y_pred))
 # Recall: 0.53
 # F1-score: 0.63
 
-plot_roc_curve(log_model, X_test, y_test)
+(log_model, X_test, y_test)
 plt.title('ROC Curve')
 plt.plot([0, 1], [0, 1], 'r--')
 plt.show()
