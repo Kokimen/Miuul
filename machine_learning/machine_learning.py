@@ -218,7 +218,7 @@ pd.set_option('display.width', 500)
 # Exploratory Data Analysis
 ######################################################
 
-df = pd.read_csv("datasets/diabetes.csv")
+df = pd.read_csv("datasets/kaggle/diabetes.csv")
 
 ##########################
 # Target'ın Analizi
@@ -253,8 +253,8 @@ for col in df.columns:
 
 cols = [col for col in df.columns if "Outcome" not in col]
 
-# for col in cols:
-#     plot_numerical_col(df, col)
+for col in cols:
+    plot_numerical_col(df, col)
 
 df.describe().T
 
@@ -562,3 +562,7 @@ cv_results['test_roc_auc'].mean()
 random_user = X.sample(1)
 
 knn_final.predict(random_user)
+
+################################################
+# CART
+################################################
