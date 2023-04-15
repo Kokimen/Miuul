@@ -976,7 +976,7 @@ pd.set_option('display.width', 500)
 
 warnings.simplefilter(action = 'ignore', category = Warning)
 
-df = pd.read_csv("datasets/diabetes.csv")
+df = pd.read_csv("datasets/kaggle/diabetes.csv")
 
 y = df["Outcome"]
 X = df.drop(["Outcome"], axis = 1)
@@ -1059,7 +1059,7 @@ gbm_model.get_params()
 
 cv_results = cross_validate(gbm_model, X, y, cv = 5, scoring = ["accuracy", "f1", "roc_auc"])
 cv_results['test_accuracy'].mean()
-# 0.7591715474068416
+# 0.75917
 cv_results['test_f1'].mean()
 # 0.634
 cv_results['test_roc_auc'].mean()
@@ -1078,8 +1078,11 @@ gbm_final = gbm_model.set_params(**gbm_best_grid.best_params_, random_state = 17
 
 cv_results = cross_validate(gbm_final, X, y, cv = 5, scoring = ["accuracy", "f1", "roc_auc"])
 cv_results['test_accuracy'].mean()
+# .78001
 cv_results['test_f1'].mean()
+# .66860
 cv_results['test_roc_auc'].mean()
+# .82577
 
 ################################################
 # XGBoost
@@ -1089,11 +1092,11 @@ xgboost_model = XGBClassifier(random_state = 17, use_label_encoder = False)
 xgboost_model.get_params()
 cv_results = cross_validate(xgboost_model, X, y, cv = 5, scoring = ["accuracy", "f1", "roc_auc"])
 cv_results['test_accuracy'].mean()
-# 0.75265
+# .75265
 cv_results['test_f1'].mean()
-# 0.631
+# .631
 cv_results['test_roc_auc'].mean()
-# 0.7987
+# .7987
 
 xgboost_params = {"learning_rate": [0.1, 0.01],
                   "max_depth": [5, 8],
@@ -1106,8 +1109,11 @@ xgboost_final = xgboost_model.set_params(**xgboost_best_grid.best_params_, rando
 
 cv_results = cross_validate(xgboost_final, X, y, cv = 5, scoring = ["accuracy", "f1", "roc_auc"])
 cv_results['test_accuracy'].mean()
+# .75786
 cv_results['test_f1'].mean()
+# .62976
 cv_results['test_roc_auc'].mean()
+# .81455
 
 ################################################
 # LightGBM
