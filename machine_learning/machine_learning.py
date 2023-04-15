@@ -1186,8 +1186,11 @@ catboost_model = CatBoostClassifier(random_state = 17, verbose = False)
 cv_results = cross_validate(catboost_model, X, y, cv = 5, scoring = ["accuracy", "f1", "roc_auc"])
 
 cv_results['test_accuracy'].mean()
+# .7735
 cv_results['test_f1'].mean()
+# .6502
 cv_results['test_roc_auc'].mean()
+# .8378
 
 catboost_params = {"iterations": [200, 500],
                    "learning_rate": [0.01, 0.1],
@@ -1200,13 +1203,18 @@ catboost_final = catboost_model.set_params(**catboost_best_grid.best_params_, ra
 cv_results = cross_validate(catboost_final, X, y, cv = 5, scoring = ["accuracy", "f1", "roc_auc"])
 
 cv_results['test_accuracy'].mean()
+# .7721
 cv_results['test_f1'].mean()
+# .6322
 cv_results['test_roc_auc'].mean()
 
+
+# .8420
 
 ################################################
 # Feature Importance
 ################################################
+
 
 def plot_importance(model, features, num=len(X), save=False):
     feature_imp = pd.DataFrame({'Value': model.feature_importances_, 'Feature': features.columns})
