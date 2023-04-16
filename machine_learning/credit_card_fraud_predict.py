@@ -110,3 +110,24 @@ plot_confusion_matrix(confusion_matrix(y_test, y_pred = y_pred), classes = ['Non
 print(classification_report(y_test, y_pred))
 
 #########6.SMOTE OVERSAMPLING#########
+from imblearn.over_sampling import SMOTE
+
+oversample = SMOTE()
+X_smote, y_smote = oversample.fit_resample(X_train, y_train)
+
+model.fit(X_smote, y_smote)
+y_pred = model.predict(X_test)
+
+accuracy = accuracy_score(y_test, y_pred)
+print("Accuracy: %.3f%%" % (accuracy))
+
+plot_confusion_matrix(confusion_matrix(y_test, y_pred = y_pred), classes = ['Non Fraud', 'Fraud'],
+                      title = 'Confusion matrix')
+
+print(classification_report(y_test, y_pred))
+
+#########7.RANDOM UNDERSAMPLING#########
+from imblearn.under_sampling import RandomUnderSampler
+
+ranUnSample = RandomUnderSampler()
+X_ranUnSample, y_ranUnSample = ranUnSample.fit_resample(X_train, y_train)
