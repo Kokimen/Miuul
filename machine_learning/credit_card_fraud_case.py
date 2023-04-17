@@ -101,11 +101,12 @@ categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 
 df.info()
 
+
 # Correlations
-plt.figure(figsize = (10, 8))
-sns.heatmap(df.corr(), cmap = "RdBu")
-plt.title("Correlations Between Variables", size = 15)
-plt.show()
+# plt.figure(figsize = (10, 8))
+# sns.heatmap(df.corr(), cmap = "RdBu")
+# plt.title("Correlations Between Variables", size = 15)
+# plt.show()
 
 
 # Checking outliers.
@@ -155,6 +156,8 @@ def missing_values_table(dataframe, na_name=False):
 
 missing_values_table(df)
 
+df["SalePrice"] = df["SalePrice"].fillna(0)
+
 
 # Encoding
 def label_encoder(dataframe, binary_col):
@@ -179,7 +182,7 @@ def rare_analyser(dataframe, target, categoric_cols):
                             "TARGET_MEAN": dataframe.groupby(col)[target].mean()}), end = "\n\n\n")
 
 
-rare_analyser(df, "Churn", categoric_cols)
+rare_analyser(df, "SalePrice", categoric_cols)
 
 
 def rare_encoder(dataframe, rare_percentage):
@@ -205,16 +208,23 @@ def one_hot_encoder(dataframe, categorical_cols, drop_first=False):
 
 
 ohe_cols = [col for col in df.columns if 10 >= df[col].nunique() > 2]
-
+ohe_cols = ohe_cols.append('NEIGHBORHOOD')
 df = one_hot_encoder(df, ohe_cols, drop_first = True)
 
+categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
+
 # Normalization
-scaler = StandardScaler()
+scaler = RobustScaler()
 df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+
+# Creating Different Models and Test
+y = df["SalePrice"]  # --> dependent variable
+X = df.drop("SalePrice", axis = 1)  # --> other variables are independent variables
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .2, random_state = 17)
 
 
 # Importance of Features with Visualization Function
-def plot_importance(model, features, num=len()):
+def plot_importance(model, features, num=len(X)):
     feature_imp = pd.DataFrame({'Value': model.feature_importances_, 'Feature': features.columns})
     plt.figure(figsize = (10, 10))
     sns.set(font_scale = 1)
@@ -225,10 +235,6 @@ def plot_importance(model, features, num=len()):
     plt.show()
 
 
-# Creating Different Models and Test
-y = df["Churn"]  # --> dependent variable
-X = df.drop(["Churn"], axis = 1)  # --> other variables are independent variables
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = .2, random_state = 17)
 ###############
 # Random Forest
 ###############
