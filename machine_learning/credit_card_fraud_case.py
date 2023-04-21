@@ -6,18 +6,14 @@
 ####################################
 # 1.IMPORT LIBRARY, PD OPTIONS, DATA
 ####################################
-import itertools
-import math
 import warnings
 import numpy as np
 import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
-import missingno as msno
 from sklearn.metrics import accuracy_score, confusion_matrix
 from sklearn.model_selection import train_test_split
-from sklearn.neighbors import LocalOutlierFactor
-from sklearn.preprocessing import LabelEncoder, StandardScaler, RobustScaler
+from sklearn.preprocessing import LabelEncoder, RobustScaler
 from sklearn.metrics import classification_report
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.tree import DecisionTreeClassifier
@@ -216,6 +212,13 @@ categoric_cols, numeric_cols, categoric_but_cardinal = grab_col_names(df)
 # Normalization
 scaler = RobustScaler()
 df[numeric_cols] = scaler.fit_transform(df[numeric_cols])
+
+useless_cols = [col for col in df.columns if df[col].nunique() == 2 and
+                (df[col].value_counts() / len(df) < 0.01).any(axis = None)]
+
+useless_cols = [col for col in useless_cols if col not in ['Id', 'SalePrice']]
+
+df.drop(useless_cols, axis = 1, inplace = True)
 
 # Creating Different Models and Test
 y = df["SalePrice"]  # --> dependent variable
