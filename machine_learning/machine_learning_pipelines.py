@@ -40,3 +40,27 @@ kmeans.n_clusters
 kmeans.cluster_centers_
 kmeans.labels_
 kmeans.inertia_
+
+################################
+# Optimum Küme Sayısının Belirlenmesi
+################################
+
+kmeans = KMeans()
+ssd = []
+K = range(1, 30)
+
+for k in K:
+    kmeans = KMeans(n_clusters = k).fit(df)
+    ssd.append(kmeans.inertia_)
+
+plt.plot(K, ssd, "bx-")
+plt.xlabel("Farklı K Değerlerine Karşılık SSE/SSR/SSD")
+plt.title("Optimum Küme sayısı için Elbow Yöntemi")
+plt.show()
+
+kmeans = KMeans()
+elbow = KElbowVisualizer(kmeans, k = (2, 20))
+elbow.fit(df)
+elbow.show()
+
+elbow.elbow_value_
