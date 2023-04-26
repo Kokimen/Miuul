@@ -64,3 +64,60 @@ elbow.fit(df)
 elbow.show()
 
 elbow.elbow_value_
+
+################################
+# Final Cluster'ların Oluşturulması
+################################
+
+kmeans = KMeans(n_clusters = elbow.elbow_value_).fit(df)
+
+kmeans.n_clusters
+kmeans.cluster_centers_
+kmeans.labels_
+df[0:5]
+
+clusters_kmeans = kmeans.labels_
+
+df = pd.read_csv("datasets/USArrests.csv", index_col = 0)
+
+df["cluster"] = clusters_kmeans
+
+df.head()
+
+df["cluster"] = df["cluster"] + 1
+
+df[df["cluster"] == 5]
+
+df.groupby("cluster").agg(["count", "mean", "median"])
+
+df.to_csv("clusters.csv")
+
+################################
+# Hierarchical Clustering
+################################
+
+df = pd.read_csv("datasets/USArrests.csv", index_col = 0)
+
+sc = MinMaxScaler((0, 1))
+df = sc.fit_transform(df)
+
+hc_average = linkage(df, "average")
+
+plt.figure(figsize = (10, 5))
+plt.title("Hiyerarşik Kümeleme Dendogramı")
+plt.xlabel("Gözlem Birimleri")
+plt.ylabel("Uzaklıklar")
+dendrogram(hc_average,
+           leaf_font_size = 10)
+plt.show()
+
+plt.figure(figsize = (7, 5))
+plt.title("Hiyerarşik Kümeleme Dendogramı")
+plt.xlabel("Gözlem Birimleri")
+plt.ylabel("Uzaklıklar")
+dendrogram(hc_average,
+           truncate_mode = "lastp",
+           p = 10,
+           show_contracted = True,
+           leaf_font_size = 10)
+plt.show()
