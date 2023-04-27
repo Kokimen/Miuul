@@ -121,3 +121,56 @@ dendrogram(hc_average,
            show_contracted = True,
            leaf_font_size = 10)
 plt.show()
+
+################################
+# Kume Sayısını Belirlemek
+################################
+
+
+plt.figure(figsize = (7, 5))
+plt.title("Dendrograms")
+dend = dendrogram(hc_average)
+plt.axhline(y = 0.5, color = 'r', linestyle = '--')
+plt.axhline(y = 0.6, color = 'b', linestyle = '--')
+plt.show()
+
+################################
+# Final Modeli Oluşturmak
+################################
+
+from sklearn.cluster import AgglomerativeClustering
+
+cluster = AgglomerativeClustering(n_clusters = 5, linkage = "average")
+
+clusters = cluster.fit_predict(df)
+
+df = pd.read_csv("datasets/USArrests.csv", index_col = 0)
+df["hi_cluster_no"] = clusters
+
+df["hi_cluster_no"] = df["hi_cluster_no"] + 1
+
+df["kmeans_cluster_no"] = df["kmeans_cluster_no"] + 1
+df["kmeans_cluster_no"] = clusters_kmeans
+
+################################
+# Principal Component Analysis
+################################
+
+df = pd.read_csv("datasets/Hitters.csv")
+df.head()
+
+num_cols = [col for col in df.columns if df[col].dtypes != "O" and "Salary" not in col]
+
+df[num_cols].head()
+
+df = df[num_cols]
+df.dropna(inplace = True)
+df.shape
+
+df = StandardScaler().fit_transform(df)
+
+pca = PCA()
+pca_fit = pca.fit_transform(df)
+
+pca.explained_variance_ratio_
+np.cumsum(pca.explained_variance_ratio_)
