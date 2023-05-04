@@ -2,8 +2,6 @@
 # Unsupervised Learning
 ################################
 
-# pip install yellowbrick
-
 import numpy as np
 import pandas as pd
 import random
