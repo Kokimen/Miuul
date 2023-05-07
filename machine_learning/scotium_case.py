@@ -23,3 +23,6 @@ def pd_options():
 
 
 pd_options()
+
+df_attr = pd.read_csv("datasets/miuul/scoutium_attributes.csv")
+df_label = pd.read_csv("datasets/miuul/scoutium_potential_labels.csv")

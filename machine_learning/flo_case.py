@@ -12,10 +12,6 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import cross_val_score, GridSearchCV
 from sklearn.preprocessing import LabelEncoder
 
-df = pd.read_csv("datasets/miuul/flo_data_20k.csv")
-
-df.head()
-
 
 def pd_options():
     pd.set_option("display.max_columns", 20)
@@ -27,3 +23,7 @@ def pd_options():
 
 
 pd_options()
+
+df = pd.read_csv("datasets/miuul/flo_data_20k.csv")
+
+df.head()
