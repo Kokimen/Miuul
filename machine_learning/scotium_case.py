@@ -26,3 +26,19 @@ pd_options()
 
 df_attr = pd.read_csv("datasets/miuul/scoutium_attributes.csv")
 df_label = pd.read_csv("datasets/miuul/scoutium_potential_labels.csv")
+
+
+def data_summary(dataframe):
+    print("# # # [ D A T A F R A M E --> I N F O ] # # #")
+    print(dataframe.info())
+    print("# # # [ D A T A F R A M E --> M I S S I N G V A L U E S ] # # #")
+    print(dataframe.isnull().sum())
+    print("# # # [ D A T A F R A M E --> D U P L I C A T E D ] # # #")
+    print(dataframe.duplicated().sum())
+    print("# # # [ D A T A F R A M E --> D E S C R I B E ] # # #")
+    print(dataframe.describe([.05, .25, .5, .75, .9, .99]).T)
+    print("# # # [ D A T A F R A M E --> H E A D ] # # #")
+    print(dataframe.head(10))
+
+
+data_summary(df_attr), data_summary(df_label)
