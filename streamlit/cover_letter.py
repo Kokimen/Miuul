@@ -72,14 +72,14 @@ st.write("Güncel olarak dış ticaret departmanında iş analisti olarak çalı
          "fark ettim. Dolayısıyla pazarlama ve reklamcılık alanında veriye dayalı karar verme mekanizmalarına başvurulan departmanlarda aktif rol alabilecek yetkinliklere "
          "sahibim. Şirket dinamikleri (sorumluluk, itibar, imaj vb.) ve pazarlama sektör bilgisine sahip bir vericiyim diyelim.")
 
-yillar = [2017, 2018, 2019, 2020]
-deneyim = [0, 1, 2, 3]
-
-plt.figure(figsize = (2, 2))
-plt.plot(yillar, deneyim, "-o")
-plt.xlabel('Yıllar')
-plt.ylabel('Deneyim Yılı')
-plt.title("Akdeniz Üniversitesi Dijital Pazarlama ve Reklamcılık Araştırma Asistanlığı")
-plt.xticks(yillar)
-
-st.pyplot(plt.gcf())
+# yillar = [2017, 2018, 2019, 2020]
+# deneyim = [0, 1, 2, 3]
+#
+# plt.figure(figsize = (2, 2))
+# plt.plot(yillar, deneyim, "-o")
+# plt.xlabel('Yıllar')
+# plt.ylabel('Deneyim Yılı')
+# plt.title("Akdeniz Üniversitesi Dijital Pazarlama ve Reklamcılık Araştırma Asistanlığı")
+# plt.xticks(yillar)
+#
+# st.pyplot(plt.gcf())
