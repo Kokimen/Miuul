@@ -5,7 +5,7 @@ from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title = "Motivational Letter for Data and Educational Company Miuul", page_icon = ":tada", layout = "wide")
 
-with st.expander("1 - Kimsin Sen?"):
+with st.expander("1 - Ben Kimim?"):
     st.subheader("Burak Koktay 👀")
     st.title("Jr. Data Analyst and Digital Marketing Researcher")
     st.write("Hem Product Marketing Manager hem de aylardır bilgiler öğrendiğim insanın açtığı pozisyona başvurmaktan heyecan duyuyorum. Geçmişimdeki pazarlama deneyimim ve "
