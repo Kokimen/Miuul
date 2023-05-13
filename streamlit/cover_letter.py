@@ -7,9 +7,7 @@ st.set_page_config(page_title = "Motivational Letter for Data and Educational Co
 
 with st.expander("1 - Kimsin Sen?"):
     st.subheader("Burak Koktay 👀")
-
     st.title("Jr. Data Analyst and Digital Marketing Researcher")
-
     st.write("Hem Product Marketing Manager hem de aylardır bilgiler öğrendiğim insanın açtığı pozisyona başvurmaktan heyecan duyuyorum. Geçmişimdeki pazarlama deneyimim ve "
              "miuul ailesinden olduğum veri eğitimleri sayesinde, ekibinize değerli katkılar sağlayabileceğime eminim.")
 
