@@ -1,5 +1,5 @@
 import streamlit as st
-import matplotlib.pyplot as plt
+import numpy as np
 from streamlit_lottie import st_lottie
 import requests
 
