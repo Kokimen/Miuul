@@ -1,6 +1,12 @@
 ﻿import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
+from streamlit_option_menu import option_menu
+
+with st.sidebar:
+    selected = option_menu("Aday Menu", ["Motivasyon", 'Neden Alalım?', "Ben Neciyim?", "Yazılarım"],
+                           icons = ['1-circle-fill', '2-circle-fill', '3-circle-fill', '4-circle-fill'], menu_icon = "cast", default_index = 1)
+    selected
 
 st.set_page_config(page_title = "Motivational Letter for Data and Educational Company Miuul", page_icon = ":tada", layout = "wide")
 
@@ -71,6 +77,14 @@ st.write("Güncel olarak dış ticaret departmanında iş analisti olarak çalı
          "fark ettim. Dolayısıyla pazarlama ve reklamcılık alanında veriye dayalı karar verme mekanizmalarına başvurulan departmanlarda aktif rol alabilecek yetkinliklere "
          "sahibim. Şirket dinamikleri (sorumluluk, itibar, imaj vb.) ve pazarlama sektör bilgisine sahip bir vericiyim diyelim.")
 
+st.header("Pozisyona Uygun Akademik Araştırmalarım")
+st.write(
+    """
+    - The Impact of Personal and Contextual Features of Social Media Phenomena on Consumers: Influencer Marketing
+    - The Effect of Using a Same Celebrity in Advertising of Various Brands in the Same Period on Consumer Attitudes
+    - The Impact of Personal Factors on Consumer Decision Styles: A Comparison of Y and Z GenerationThe Impact of Personal Factors on Consumer Decision Styles: A Comparison of Y and Z Generation
+    """
+)
 # yillar = [2017, 2018, 2019, 2020]
 # deneyim = [0, 1, 2, 3]
 #
