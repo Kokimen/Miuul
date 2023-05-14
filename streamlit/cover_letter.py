@@ -1,9 +1,9 @@
 ﻿import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
-from streamlit_option_menu import option_menu
+from PIL import Image
 
-st.set_page_config(page_title = "Motivational Letter for Data and Educational Company Miuul", page_icon = ":tada", layout = "wide")
+st.set_page_config(page_title = "Motivational Letter for Data and Educational Company Miuul", page_icon = ":tada", layout = "centered")
 
 with st.expander("1 - Ben Kimim?"):
     st.subheader("Burak Koktay 👀")
@@ -83,6 +83,10 @@ with st.expander("5 - Pozisyona Uygun Akademik Araştırmalarım"):
         - The Impact of Personal Factors on Consumer Decision Styles: A Comparison of Y and Z GenerationThe Impact of Personal Factors on Consumer Decision Styles: A Comparison of Y and Z Generation
         """
     )
+
+image = Image.open('streamlit/pic1.png')
+st.image(image, caption = 'Miuul Seçim Pusulası')
+
 # yillar = [2017, 2018, 2019, 2020]
 # deneyim = [0, 1, 2, 3]
 #
